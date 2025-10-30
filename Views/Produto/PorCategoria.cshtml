@@ -1,0 +1,31 @@
+@model List<Ecommerce.Models.Produto>
+
+    <div class="row">
+        @if (Model.Any())
+        {
+            @foreach (var produto in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <img src="@produto.ImagemUrl" class="card-img-top" alt="@produto.NomeProduto">
+                        <div class="card-body">
+                            <h5 class="card-title">@produto.NomeProduto</h5>
+                            <p class="card-text">@produto.Descricao</p>
+                            <h4 class="card-price">R$ @produto.Preco.ToString("F2")</h4>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-controller="Produto" asp-action="Detalhes" asp-route-id="@produto.IdProduto" class="btn btn-success">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <p class="alert alert-warning">Nenhum produto encontrado nesta categoria.</p>
+            </div>
+        }
+    </div>

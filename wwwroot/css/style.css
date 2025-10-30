@@ -1,0 +1,168 @@
+/* Imagens do carrossel */
+.carousel-item img {
+  width: 100%;
+  height: 65vh; /* Altura ajustada para telas maiores */
+  object-fit: cover; /* corta a imagem mantendo proporção */
+}
+
+/* 1. Sombreamento (Degradê) e posicionamento */
+.carousel-item {
+  position: relative; 
+  overflow: hidden; 
+  border-radius: 15px; 
+  cursor: pointer;
+}
+
+/* Aplica o degradê de baixo para cima cobrindo 60% da altura (mais suave no topo) */
+.carousel-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%; /* Cobrir um pouco mais da imagem */
+  /* Degradê MAIS INTENSO, mas com transição suave */
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,   /* Fundo preto mais forte na base */
+    rgba(0, 0, 0, 0.3) 50%,   /* Suave em 50% */
+    rgba(0, 0, 0, 0) 100%    /* Transparente no topo */
+  );
+  z-index: 1; 
+  pointer-events: none; 
+}
+
+/* 2. Área de texto (Legenda) - Centraliza e ajusta a posição */
+.carousel-caption {
+  padding: 0; 
+  /* Posição ajustada para ficar acima dos indicadores e dar espaço ao botão */
+  bottom: 3rem; 
+  left: 0 !important; 
+  right: 0 !important; 
+  z-index: 2; 
+  text-align: center; 
+}
+
+/* Tipografia (Título) */
+.carousel-caption h5 {
+  color: #fff;
+  /* Reduzido o peso para 600 (menos negrito) */
+  font-size: 2.5rem; 
+  font-weight: 600; /* ANTERIORMENTE ERA 700 */
+  letter-spacing: 0; /* Removido o espaçamento para visual mais limpo */
+  text-transform: none; /* REMOVIDO: uppercase para fonte mais suave e moderna */
+  margin-bottom: 0.5rem; 
+  
+  /* Sombra Suave */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6); /* Sombra mais difusa e menos intensa */
+  padding: 0 10%; 
+}
+
+/* Tipografia (Parágrafo - Frase de Chamada) */
+.carousel-caption p {
+  color: #fff;
+  font-size: 1.25rem; 
+  font-weight: 400; 
+  margin-bottom: 1.0rem; 
+  
+  /* Sombra Suave */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Sombra ainda mais sutil */
+  padding: 0 10%; 
+}
+
+
+/* 3. Estilo Moderno e Ajustado para o Botão CTA no Carrossel */
+.btn-carousel-cta {
+    /* Cores e Aparência (Verde mais suave) */
+    background-color: #1b771e; 
+    border: 2px solid #1b771e; 
+    color: #fff;
+    
+    /* Tamanho e Forma (Reduzido) */
+    padding: 0.6rem 1.5rem; 
+    font-size: 1rem; 
+    font-weight: 600; 
+    border-radius: 6px; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    
+    /* Sombra mais discreta */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); 
+    transition: all 0.3s ease;
+    margin-top: 0; 
+}
+
+/* Efeito Hover (ao passar o mouse) */
+.btn-carousel-cta:hover {
+    background-color: #43A047; 
+    border-color: #43A047;
+    transform: translateY(-1px); 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+/* Garante que o botão não tenha sombra de texto */
+.carousel-caption .btn {
+    text-shadow: none;
+}
+
+
+/* Botões de navegação */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.6));
+  z-index: 3; 
+}
+
+/* Mantém o layout arredondado e sem scroll */
+.carousel-inner {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .carousel-item img {
+    height: 45vh; /* Altura ajustada para tablet/celular */
+  }
+
+  /* Ajustes na legenda para dispositivos menores */
+  .carousel-caption {
+    bottom: 2.5rem; 
+  }
+  
+  .carousel-caption h5 {
+    font-size: 1.8rem;
+    padding: 0 5%; 
+  }
+
+  .carousel-caption p {
+    font-size: 1rem;
+    padding: 0 5%; 
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-item img {
+    height: 35vh; /* Altura ajustada para celular */
+  }
+  
+  /* Mantém a posição ajustada no celular */
+  .carousel-caption {
+    bottom: 1.5rem;
+  }
+
+  .carousel-caption h5 {
+    font-size: 1.2rem;
+  }
+
+  .carousel-caption p {
+    font-size: 0.85rem;
+  }
+  
+  /* Botão menor no celular */
+  .btn-carousel-cta {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+  }
+}

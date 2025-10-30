@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Empório Irmãs da Terra</title>
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-principal">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo/logo.jpg" alt="Logo Empório Irmãs da Terra" style="height: 40px;" class="me-2"> <span style="color: var(--cor-verde-floresta); font-weight: 700; font-size: 1.2rem;">
+        Empório Irmãs da Terra
+                    </span>
+                </a>    
+                <div class="mx-auto w-50">
+                    <form class="form-busca" asp-controller="Produtos" asp-action="Buscar" method="get">
+                        
+                        <input class="form-control" type="search" placeholder="O que você procura?" name="termo">
+                        
+                        <button class="btn btn-busca" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="d-flex nav-icones align-items-center">
+                    @{
+                        var usuarioNome = Context.Session.GetString("UsuarioNome");
+                    }
+
+                    @if (usuarioNome != null)
+                    {
+                        <div class="d-flex align-items-start me-3">
+                            
+                            <span class="nav-link p-0" style="margin-right: 5px; margin-top: 3px;">
+                                <i class="fa fa-user-circle fa-2x"></i>
+                            </span>
+
+                            <div class="d-flex flex-column align-items-start justify-content-center">
+                                <span style="font-size: 0.9em; font-weight: 500; line-height: 1.2;">
+                                    Olá, @usuarioNome!
+                                </span>
+                                <a href="#" class="nav-link p-0 text-danger" 
+                                data-bs-toggle="modal" data-bs-target="#modalConfirmacaoLogout" 
+                                style="font-size: 0.8em; text-decoration: underline; line-height: 1.2;">
+                                    Sair
+                                </a>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <a class="nav-link d-flex align-items-center me-3" asp-controller="Usuario" asp-action="Login">
+                            <i class="fa fa-user-circle fa-2x me-2"></i>
+                            <div class="d-flex flex-column" style="line-height: 1.2; font-size: 0.9em;">
+                                <span>Entre ou</span>
+                                <strong>Cadastre-se</strong>
+                            </div>
+                        </a>
+                    }
+                    
+                    <a class="nav-link d-flex align-items-center" asp-controller="Carrinho" asp-action="Index">
+                        <i class="fa fa-shopping-cart fa-2x me-2"></i>
+                        <div class="d-flex flex-column" style="line-height: 1.2; font-size: 0.9em;">
+                            <span>Meu</span>
+                            <strong>Carrinho</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-expand-sm navbar-categorias">
+            <div class="container">
+                <div class="navbar-nav mx-auto">
+                    <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="1">Chás e Infusões</a>
+                    <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="2">Temperos</a>
+                    <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="3">Suplementos</a>
+                    <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="4">Queijos e Laticínios</a>
+                    <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="5">Vinhos e Bebidas</a>
+                    <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="6">Grãos e Cereais</a>
+                    
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <a href="https://wa.me/5517981250517" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-12">
+                    <h5>REDES SOCIAIS </h5>
+                    <div class="social-icons">
+                        <a href="https://www.facebook.com/emporioirmasdaterra/"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/emporioirmasdaterra/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/5517981250517"><i class="fab fa-whatsapp"></i></a>                       
+                                               
+                    </div>
+                </div>
+                </div>
+            <hr style="border-color: rgba(255,255,255,0.2);">
+            <p>&copy; @DateTime.Now.Year - Empório Irmãs da Terra</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <div class="modal fade" id="modalConfirmacaoLogout" tabindex="-1" aria-labelledby="modalConfirmacaoLogoutLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmacaoLogoutLabel">Encerrar Sessão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Você tem certeza que deseja sair?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a asp-controller="Usuario" asp-action="Logout" class="btn btn-danger">
+                        Sim, Encerrar Sessão
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

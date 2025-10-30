@@ -1,0 +1,233 @@
+/*
+ * 1. DEFINIÇÃO DA PALETA DE CORES 
+ */
+:root {
+    --cor-verde-floresta: #3E562F;
+    --cor-verde-floresta-escuro: #2D4021; 
+    --cor-marrom-terra: #5D4037;   
+    --cor-branco-amendoa: #FBF9F6; 
+    --cor-cinza-escuro: #333333;   
+    --cor-cinza-claro: #E0E0E0;    
+    --cor-rosa-flor: #C94A80;      
+    --cor-amarelo-sol: #FBC02D;     
+}
+
+/*
+ * 2. ESTILOS GLOBAIS 
+ */
+body {
+    background-color: var(--cor-branco-amendoa); 
+    color: var(--cor-cinza-escuro);             
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--cor-verde-floresta); 
+    font-weight: 600;
+}
+
+a {
+    color: var(--cor-verde-floresta); 
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--cor-rosa-flor); 
+    text-decoration: underline;
+}
+
+.btn-primary {
+    background-color: var(--cor-cinza-escuro); 
+    border-color: var(--cor-cinza-escuro);
+    color: var(--cor-branco-amendoa);       
+}
+
+.btn-primary:hover {
+    background-color: #79a86b; 
+    border-color: #79a86b;
+    color: var(--cor-branco-amendoa);
+}
+
+.text-primary {
+    color: var(--cor-rosa-flor) !important;
+}
+
+.text-secondary {
+    color: var(--cor-verde-floresta) !important;
+}
+
+/*
+ * 3. LAYOUT (HEADER E FOOTER)
+ */
+
+/* Header Principal (Logo, Busca, Ícones) */
+
+header {
+    position: sticky; /* Faz o elemento "grudar" */
+    top: 0;           /* Gruda no topo (0px do topo) */
+    z-index: 1000;    /* Garante que o menu fique ACIMA de outros conteúdos */
+    width: 100%;      /* Garante que o header ocupe toda a largura */
+}
+
+.navbar-principal {
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--cor-cinza-claro);
+    padding: 1rem 0;
+}
+
+    .navbar-principal .navbar-brand img {
+        max-height: 50px; /* Ajustar a altura da logo */
+    }
+
+    .navbar-principal .form-busca {
+        display: flex;
+        width: 100%;
+    }
+
+    .navbar-principal .form-busca .form-control {
+        border-right: 0;
+        border-color: var(--cor-cinza-claro);
+    }
+
+    .navbar-principal .form-busca .btn-busca {
+        background-color: var(--cor-verde-floresta);
+        border-color: var(--cor-verde-floresta);
+        color: #fff;
+    }
+
+    .navbar-principal .nav-icones .nav-link {
+        color: var(--cor-cinza-escuro);
+        font-size: 0.9rem;
+        text-align: center;
+        margin-left: 1rem;
+    }
+    .navbar-principal .nav-icones .nav-link i {
+        font-size: 1.5rem;
+        display: block;
+    }
+
+
+/* Menu de Categorias */
+.navbar-categorias {
+    background-color: var(--cor-verde-floresta); 
+    padding: 0.75rem 0;
+}
+
+    .navbar-categorias .nav-link {
+        color: #ffffff;
+        font-weight: 500;
+        text-transform: uppercase;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        padding-left: 0.5rem;  
+        padding-right: 0.5rem; 
+
+        
+        margin-left: 0.9rem;   
+        margin-right: 0.9rem;  
+        white-space: nowrap;
+    }
+
+    .navbar-categorias .nav-link:hover {
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 4px;
+        text-decoration: none;
+    }
+
+    .navbar-categorias .nav-link.ofertas {
+        background-color: #79a86b; 
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+
+/* Rodapé (Footer) */
+.footer {
+    background-color: var(--cor-marrom-terra); 
+    color: var(--cor-branco-amendoa);       
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+    .footer h5 {
+        color: var(--cor-branco-amendoa);
+    }
+
+    .footer .social-icons a {
+        color: var(--cor-branco-amendoa);
+        font-size: 1.75rem;
+        margin-right: 1rem;
+        text-decoration: none;
+    }
+
+    .footer .social-icons a:hover {
+        color: var(--cor-amarelo-sol);
+    }
+
+
+/*
+ * 4. COMPONENTES (Homepage)
+ */
+
+/* Banner Principal  */
+.hero-banner {
+    background-color: #fceeee; 
+    background-image: url('../images/banner.png'); 
+    background-size: cover;
+    background-position: center;
+    padding: 12rem 0;
+    border-radius: 12px;
+    margin-top: 2rem;
+    text-align: center; /* Simplificado - ajuste conforme o design */
+}
+
+/* Cards de Produto  */
+.product-card {
+    border: 1px solid var(--cor-cinza-claro); 
+    border-radius: 8px;
+    background-color: #ffffff;
+    transition: all 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+}
+
+.product-card .card-body {
+    padding: 1rem;
+    text-align: center;
+}
+
+.product-card .card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cor-cinza-escuro); 
+    min-height: 40px; /* Ajuda a alinhar os cards */
+}
+
+.product-card .product-stars {
+    color: var(--cor-amarelo-sol); 
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Ícone do WhatsApp Flutuante  */
+.whatsapp-float {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: #25D366;
+    color: #FFF;
+    border-radius: 50px;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    font-size: 38px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+    z-index: 100;
+}
+
+.whatsapp-float:hover {
+    color: #FFF;
+}
