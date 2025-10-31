@@ -4,28 +4,23 @@
     ViewData["Title"] = "Página Inicial";
 }
 
-@*<div class="hero-banner my-4">
-</div>*@
+
 <link rel="stylesheet" href="~/css/style.css">
 
 @section Scripts {
 <script>
-    $(document).ready(function() {
-        // Seleciona todos os itens do carrossel que têm o atributo data-categoria-url
-        $('.carousel-item').on('click', function(event) {
+    $(document).ready(function() {        
+        $('.carousel-item').on('click', function(event) {            
             
-            // Verifica se o clique NÃO foi no botão (ou em qualquer elemento dentro da legenda)
-            // Isso evita o clique duplo, garantindo que o botão funcione normalmente.
             if (!$(event.target).closest('.carousel-caption').length) {
                 
-                // Pega o slug da categoria do atributo data-
+                
                 var categoriaSlug = $(this).data('categoria-url');
                 
                 if (categoriaSlug) {
-                    // Monta a URL (AQUI é onde a mágica acontece)
-                    var url = '@Url.Action("PorCategoria", "Produtos")' + '?categoria=' + categoriaSlug;
                     
-                    // Redireciona
+                    var url = '@Url.Action("PorCategoria", "Produto")' + '?categoria=' + categoriaSlug;                    
+                    
                     window.location.href = url;
                 }
             }
@@ -46,14 +41,13 @@
             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="5" aria-label="Slide 6"></button>
         </div>
 
-        <div class="carousel-inner">
-            
+        <div class="carousel-inner">            
             <div class="carousel-item active" data-categoria-url="temperos">
                 <img src="/images/banner/banner1.jpg" class="d-block w-100" alt="Promoção de Temperos Naturais">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Temperos Naturais</h5>
-                    <p>Realce o sabor dos seus pratos com nossos produtos 100% naturais.</p>
-                    <a asp-controller="Produtos" asp-action="PorCategoria" asp-route-categoria="temperos" class="btn btn-carousel-cta">Ver Produtos</a> 
+                    <p>Realce o sabor dos seus pratos com nossos produtos 100% naturais.</p>                    
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="1" class="btn btn-carousel-cta">Ver Produtos</a> 
                 </div>
             </div>
             
@@ -62,7 +56,7 @@
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Chás e Infusões</h5>
                     <p>Relaxe e cuide da sua saúde com blends especiais.</p>
-                    <a asp-controller="Produtos" asp-action="PorCategoria" asp-route-categoria="chas" class="btn btn-carousel-cta">Ver Produtos</a>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="2" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
             
@@ -71,7 +65,7 @@
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Queijos Artesanais</h5>
                     <p>Sabor e qualidade direto do campo para sua mesa.</p>
-                    <a asp-controller="Produtos" asp-action="PorCategoria" asp-route-categoria="queijos" class="btn btn-carousel-cta">Ver Produtos</a>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="3" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
             
@@ -80,7 +74,7 @@
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Saúde e Bem-Estar</h5>
                     <p>Nutrição completa para seu corpo e sua rotina diária.</p>
-                    <a asp-controller="Produtos" asp-action="PorCategoria" asp-route-categoria="suplementos" class="btn btn-carousel-cta">Ver Produtos</a>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="4" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
             
@@ -89,7 +83,7 @@
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Seleção de Bebidas</h5>
                     <p>Rótulos especiais e bebidas artesanais para celebrar momentos.</p>
-                    <a asp-controller="Produtos" asp-action="PorCategoria" asp-route-categoria="vinhos" class="btn btn-carousel-cta">Ver Produtos</a>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="5" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
             
@@ -98,7 +92,7 @@
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Grãos e Cereais</h5>
                     <p>Ingredientes nutritivos para uma alimentação equilibrada.</p>
-                    <a asp-controller="Produtos" asp-action="PorCategoria" asp-route-categoria="graos" class="btn btn-carousel-cta">Ver Produtos</a>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="6" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
         </div>
@@ -113,9 +107,9 @@
         </button>
     </div>
 
-    <div class="row mb-3">
+    </br><div class="row mb-3">
         <div class="col">
-            <h2>MAIS VENDIDOS <span style="color: var(--cor-cinza-escuro); font-weight: 300;"></span></h2>
+            <h2>EM DESTAQUE <span style="color: var(--cor-cinza-escuro); font-weight: 300;"></span></h2>
         </div>
     </div>
 
@@ -148,10 +142,10 @@
 
                             <h4 style="color: var(--cor-verde-floresta);">R$ @produto.Preco.ToString("F2")</h4>
 
-                            <a asp-controller="Produtos" 
+                            <a asp-controller="Produto" 
                             asp-action="Detalhes" 
                             asp-route-id="@produto.IdProduto" 
-                            class="btn btn-outline-primary w-100">
+                            class="btn btn-outline-success w-100">
                             Ver Detalhes
                             </a>
 
