@@ -21,23 +21,6 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
             });
         }        
         return lista;
-    }
+    }    
     
-    public Categoria Read(int id)
-    {
-        SqlCommand cmd = new SqlCommand("SELECT * FROM Categoria WHERE IdCategoria = @id", conn);
-        cmd.Parameters.AddWithValue("@id", id);
-        SqlDataReader reader = cmd.ExecuteReader();
-
-        if (reader.Read())
-        {
-            var categoria = new Categoria
-            {
-                IdCategoria = (int)reader["IdCategoria"],
-                NomeCategoria = (string)reader["NomeCategoria"]
-            };            
-            return categoria;
-        }        
-        return null;
-    }
 }

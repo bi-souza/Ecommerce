@@ -3,6 +3,5 @@ namespace Ecommerce.Repositories;
 
 public interface ICategoriaRepository
 {
-    List<Categoria> Read(); 
-    Categoria Read(int id); 
+    List<Categoria> Read();      
 }

@@ -1,0 +1,48 @@
+@model List<Ecommerce.Models.Produto>
+
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    </head>
+
+    <div class="container mt-3">
+
+    @*<body class="container-fluid">*@
+        <h1>Gerenciamento de Produtos</h1>
+        <p>Total de produtos: @Model.Count</p>
+
+        <a class="btn btn-outline-success mb-3" href="/produto/create">Adicionar Novo Produto</a>
+
+        <table class="table table-hover table-striped">
+            <thead class="table-success">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var produto in Model) {
+                <tr>
+                    <td>@produto.IdProduto</td>
+                    <td>@produto.NomeProduto</td>
+                    <td>@produto.Preco.ToString("C")</td>
+                    <td>@produto.Estoque</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-warning" href="/produto/update/@produto.IdProduto">
+                            Editar
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-danger" href="/produto/delete/@produto.IdProduto">
+                            Apagar
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+
+    @*</body>*@
+</html>

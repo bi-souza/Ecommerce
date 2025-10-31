@@ -4,11 +4,82 @@ GO
 USE BDEcommerce
 GO
 
-
 CREATE TABLE Categoria
 (
-    IdCategoria   int          primary key  identity,
-    NomeCategoria varchar(200) not null      
+    IdCategoria   int          not null    primary key  identity,
+    NomeCategoria varchar(400) not null      
+)
+
+
+CREATE TABLE Produto
+(
+    IdProduto   int            not null     primary key  identity,
+    NomeProduto varchar(200)   not null     unique,
+    Descricao   varchar(400)   not null,
+    Preco       decimal(7,2)   not null,     
+    Estoque     int            not null     default 0,
+    ImagemUrl   varchar(500)   not null,   
+    Destaque    int            not null     check (Destaque in (0, 1)) default 0, 
+    CategoriaId int            not null,    
+    foreign key (CategoriaId)  references  Categoria(IdCategoria)  
+)
+
+
+CREATE TABLE Cliente
+(
+    IdCliente   int             primary key  identity,
+    NomeCliente varchar(700)    not null,
+    Cpf         varchar(14)     not null     unique,
+    Email       varchar(100)    not null,
+    Telefone    varchar(14)     not null,
+    DataNasc    date                null   
+)
+
+
+CREATE TABLE Pedido
+(
+    IdPedido     int            not null     primary key  identity,
+    DataPedido   datetime       not null     default getdate(),
+    ValorTotal   decimal(7,2)   not null,
+    StatusPedido varchar(100)   not null     default 'Em andamento'
+    check (StatusPedido in ('Aguardando pagamento', 'Em andamento', 'Concluído', 'Cancelado')),    
+    ClienteId    int            not null,    
+    foreign key  (ClienteId)    references  Cliente(IdCliente)    
+)
+
+
+CREATE TABLE Pagamento
+(
+    IdPagamento     int             not null     primary key  identity,
+    ValorPago       decimal(7,2)    not null,
+    DataPagamento   datetime        not null     default getdate(),
+    TipoPagamento   varchar(50)     not null     check (TipoPagamento in ('Pix', 'Débito', 'Crédito', 'Dinheiro')),
+    PedidoId        int             not null,    
+    foreign key     (PedidoId)      references Pedido(IdPedido)   
+)
+
+CREATE TABLE Avalicao
+(
+    DataAvalicao   datetime         not null    default getdate(),
+    Comentario     varchar(500)         null,
+    Nota           int              not null    check (Nota between 1 and 5),
+    ClienteId      int              not null,
+    ProdutoId      int              not null,
+    primary key    (ClienteId, ProdutoId),
+    foreign key    (ClienteId)      references Cliente(IdCliente),
+    foreign key    (ProdutoId)      references Produto(IdProduto)
+)
+
+CREATE TABLE ItensPedido
+(
+    Quantidade     int              not null,
+    PrecoUnit      decimal(7,2)     not null,
+    ValorItem      decimal(7,2)     not null,
+    PedidoId       int              not null,
+    ProdutoId      int              not null,
+    primary key    (PedidoId, ProdutoId),
+    foreign key    (PedidoId)       references Pedido(IdPedido),
+    foreign key    (ProdutoId)      references Produto(IdProduto)
 )
 
 INSERT INTO Categoria (NomeCategoria) VALUES ('Chás e Infusões');
@@ -17,20 +88,6 @@ INSERT INTO Categoria (NomeCategoria) VALUES ('Suplementos Naturais');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Queijos e Laticínios');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Vinhos e Bebidas');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Grãos e Cereais');
-
-
-CREATE TABLE Produto
-(
-    IdProduto   int            primary key  identity,
-    NomeProduto varchar(200)   not null     unique,
-    Descricao   varchar(400)   not null,
-    Preco       decimal(7,2)   not null,     
-    Estoque     int            not null     default 0,
-    ImagemUrl   varchar(900)   not null    
-    Destaque    int            check (Destaque in (0, 1)) default 0, 
-    CategoriaId int            not null,    
-    foreign key (CategoriaId)  references  Categoria(IdCategoria)  
-)
 
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Chá de Camomila', 'Flores de camomila secas para infusão. Pacote 30g.', 14.50, 50, '/images/produtos/cha-de-camomila.jpg', 0, 1);
@@ -58,58 +115,4 @@ VALUES ('Vinho Tinto', 'Vinho tinto seco orgânico nacional. Garrafa 750ml.', 72
 
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Quinoa Real em Grãos', 'Grãos de Quinoa Real orgânica. Pacote 250g.', 19.90, 40, '/images/produtos/quinoa-graos.jpg', 1, 6);
-
-CREATE TABLE Cliente
-(
-    IdCliente   int             primary key  identity,
-    NomeCliente varchar(700)    not null
-    Cpf         varchar(14)     not null     unique,
-    Email       varchar(100)    not null,
-    Telefone    varchar(14)     not null,
-    DataNasc    date            not null   
-)
-
-CREATE TABLE Pedido
-(
-    IdPedido     int            primary key  identity,
-    DataPedido   datetime       not null    default getdate(),
-    ValorTotal   decimal(7,2)   not null,
-    StatusPedido varchar(50)    default 'Em andamento'
-    check (StatusPedido in ('Aguardando pagamento', 'Em andamento', 'Concluido', 'Cancelado')),    
-    ClienteId    int            not null,
-    CupomId      int            null,
-    foreign key  (ClienteId)    references  Cliente(IdCliente),
-    foreign key  (CupomId)      references  Cupom(IdCupom)
-)
-
-CREATE TABLE Cupom
-(
-    IdCupom         int             primary key  identity,
-    Codigo          varchar(100)    not null     unique,
-    ValorDesconto   decimal(7,2)    not null,
-    DataValidade    date            not null,
-)
-
-
-CREATE TABLE Pagamento
-(
-    IdPagamento     int             primary key  identity,
-    ValorPago       decimal(7,2)    not null,
-    DataPagamento   datetime        not null    default getdate(),
-    TipoPagamento   varchar(50)     check (tipoPagamento in ('Pix', 'Débito', 'Crédito', 'Dinheiro')),
-    PedidoId        int             not null,    
-    foreign key     (PedidoId)      references Pedido(IdPedido)   
-)
-
-CREATE TABLE Parcela
-(
-    IdParcela      int             primary key  identity,
-    NumeroParcela  int             not null     check (NumeroParcela > 0 and NumeroParcela <= 3),              
-    ValorParcela   decimal(7,2)    not null,
-    DataVencimento date            not null,
-    StatusParcela  varchar(50)     check (StatusParcela in ('Paga', 'Pendente', 'Em atraso')),
-    PagamentoId    int             not null,
-    foreign key     (PagamentoId)  references Pagamento(IdPagamento)
-)
-
 
