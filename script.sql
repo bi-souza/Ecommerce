@@ -58,9 +58,9 @@ CREATE TABLE Pagamento
     foreign key     (PedidoId)      references Pedido(IdPedido)   
 )
 
-CREATE TABLE Avalicao
+CREATE TABLE Avaliacao
 (
-    DataAvalicao   datetime         not null    default getdate(),
+    DataAvaliacao   datetime         not null    default getdate(),
     Comentario     varchar(500)         null,
     Nota           int              not null    check (Nota between 1 and 5),
     ClienteId      int              not null,
@@ -116,3 +116,5 @@ VALUES ('Vinho Tinto', 'Vinho tinto seco orgânico nacional. Garrafa 750ml.', 72
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Quinoa Real em Grãos', 'Grãos de Quinoa Real orgânica. Pacote 250g.', 19.90, 40, '/images/produtos/quinoa-graos.jpg', 1, 6);
 
+INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc)
+VALUES ('Maria da Silva', '123.456.789-00', 'maria.silva@exemplo.com', '11987654321', '1990-05-15');

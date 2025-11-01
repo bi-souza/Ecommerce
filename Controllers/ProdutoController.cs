@@ -7,15 +7,17 @@ namespace Ecommerce.Controllers;
 public class ProdutoController : Controller
 {
     private IProdutoRepository produtoRepository;
-    
     private ICategoriaRepository categoriaRepository;
+    private IAvaliacaoRepository avaliacaoRepository;
 
-    public ProdutoController(IProdutoRepository produtoRepository, ICategoriaRepository categoriaRepository)
+    public ProdutoController(IProdutoRepository produtoRepository, ICategoriaRepository categoriaRepository, IAvaliacaoRepository avaliacaoRepository)
     {
         this.produtoRepository = produtoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.avaliacaoRepository = avaliacaoRepository;
     }
 
+    
     public ActionResult Index()
     {        
         var listaDeProdutos = produtoRepository.ReadAll();
@@ -81,6 +83,10 @@ public class ProdutoController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
+
+        var listaDeAvaliacoes = avaliacaoRepository.ReadByProduto(id);
+
+        ViewBag.Avaliacoes = listaDeAvaliacoes;
 
         return View(produto);
     }
