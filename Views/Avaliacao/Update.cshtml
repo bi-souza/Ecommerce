@@ -1,0 +1,27 @@
+@model Ecommerce.Models.Avaliacao 
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    </head>
+    @*<body class="container">*@
+        <div class="container mt-4">
+
+        <h1 class="mb-4">Editar Avaliação</h1>
+        
+        <form action="/avaliacao/update/@Model.ProdutoId" method="POST">
+            
+            <div class="mb-3">
+                <label for="Nota" class="form-label">Nota (1 a 5):</label>
+                <input name="Nota" type="number" min="1" max="5" class="form-control" value="@Model.Nota" />
+            </div>
+            
+            <div class="mb-3">
+                <label for="Comentario" class="form-label">Comentário:</label>
+                <textarea name="Comentario" class="form-control" rows="4">@Model.Comentario</textarea>
+            </div>
+            
+            <button class="btn btn-outline-success">Salvar Alterações</button>
+            <a href="/Produto/Detalhes/@Model.ProdutoId" class="btn btn-secondary">Cancelar</a>
+        </form>
+    @*</body>*@
+</html>

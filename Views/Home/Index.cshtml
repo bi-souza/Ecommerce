@@ -15,11 +15,11 @@
             if (!$(event.target).closest('.carousel-caption').length) {
                 
                 
-                var categoriaSlug = $(this).data('categoria-url');
+                var categoriaId = $(this).data('categoria-id');
                 
-                if (categoriaSlug) {
+                if (categoriaId) {
                     
-                    var url = '@Url.Action("PorCategoria", "Produto")' + '?categoria=' + categoriaSlug;                    
+                    var url = '@Url.Action("PorCategoria", "Produto")' + '?id=' + categoriaId;                    
                     
                     window.location.href = url;
                 }
@@ -42,43 +42,43 @@
         </div>
 
         <div class="carousel-inner">            
-            <div class="carousel-item active" data-categoria-url="temperos">
+            <div class="carousel-item active" data-categoria-id="2">
                 <img src="/images/banner/banner1.jpg" class="d-block w-100" alt="Promoção de Temperos Naturais">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Temperos Naturais</h5>
                     <p>Realce o sabor dos seus pratos com nossos produtos 100% naturais.</p>                    
-                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="1" class="btn btn-carousel-cta">Ver Produtos</a> 
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="2" class="btn btn-carousel-cta">Ver Produtos</a> 
                 </div>
             </div>
             
-            <div class="carousel-item" data-categoria-url="chas">
+            <div class="carousel-item" data-categoria-id="1">
                 <img src="/images/banner/banner2.jpg" class="d-block w-100" alt="Chás e Infusões">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Chás e Infusões</h5>
                     <p>Relaxe e cuide da sua saúde com blends especiais.</p>
-                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="2" class="btn btn-carousel-cta">Ver Produtos</a>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="1" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
             
-            <div class="carousel-item" data-categoria-url="queijos">
+            <div class="carousel-item" data-categoria-id="4">
                 <img src="/images/banner/banner3.jpg" class="d-block w-100" alt="Queijos e Laticínios Artesanais">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Queijos Artesanais</h5>
                     <p>Sabor e qualidade direto do campo para sua mesa.</p>
-                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="3" class="btn btn-carousel-cta">Ver Produtos</a>
-                </div>
-            </div>
-            
-            <div class="carousel-item" data-categoria-url="suplementos">
-                <img src="/images/banner/banner4.jpg" class="d-block w-100" alt="Suplementos">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>Saúde e Bem-Estar</h5>
-                    <p>Nutrição completa para seu corpo e sua rotina diária.</p>
                     <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="4" class="btn btn-carousel-cta">Ver Produtos</a>
                 </div>
             </div>
             
-            <div class="carousel-item" data-categoria-url="vinhos">
+            <div class="carousel-item" data-categoria-id="3">
+                <img src="/images/banner/banner4.jpg" class="d-block w-100" alt="Suplementos">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Saúde e Bem-Estar</h5>
+                    <p>Nutrição completa para seu corpo e sua rotina diária.</p>
+                    <a asp-controller="Produto" asp-action="PorCategoria" asp-route-id="3" class="btn btn-carousel-cta">Ver Produtos</a>
+                </div>
+            </div>
+            
+            <div class="carousel-item" data-categoria-id="5">
                 <img src="/images/banner/banner5.jpg" class="d-block w-100" alt="Vinhos e Bebidas">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Seleção de Bebidas</h5>
@@ -87,7 +87,7 @@
                 </div>
             </div>
             
-            <div class="carousel-item" data-categoria-url="graos">
+            <div class="carousel-item" data-categoria-id="6">
                 <img src="/images/banner/banner6.jpg" class="d-block w-100" alt="Grãos e Cereais">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Grãos e Cereais</h5>
