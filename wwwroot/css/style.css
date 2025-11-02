@@ -166,3 +166,34 @@
       font-size: 0.9rem;
   }
 }
+
+/*
+ * Estilização customizada para a tela de Login
+ * (Baseado nas classes que você usou no Login.cshtml)
+ */
+
+/* 1. Botão "Entrar": Cinza escuro por padrão */
+.btn-auth-submit {
+    background-color: #343a40; /* Um cinza escuro (padrão Bootstrap) */
+    border-color: #343a40;
+    color: #ffffff; /* Texto branco */
+}
+
+/* 2. Botão "Entrar": Verde ao passar o mouse (hover) */
+.btn-auth-submit:hover {
+    background-color: #3E562F; /* Um verde (padrão Bootstrap) */
+    border-color: #3E562F;
+    color: #ffffff;
+}
+
+/* 3. Link "Cadastre-se aqui": Cor verde */
+.link-auth-action {
+    color: #3E562F; /* Mesmo verde do hover */
+    text-decoration: none; /* Opcional: remove o sublinhado */
+}
+
+/* Opcional: Faz o link "Cadastre-se aqui" ficar sublinhado no hover */
+.link-auth-action:hover {
+    color: #4A5D23; /* Um verde um pouco mais escuro */
+    text-decoration: underline;
+}

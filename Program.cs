@@ -10,9 +10,13 @@ builder.Services.AddTransient<ICategoriaRepository>(_ =>
 builder.Services.AddTransient<IProdutoRepository>(_ =>
     new ProdutoDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
-        
-builder.Services.AddTransient<IAvaliacaoRepository>(_ => 
+
+builder.Services.AddTransient<IAvaliacaoRepository>(_ =>
     new AvaliacaoDatabaseRepository(
+        builder.Configuration.GetConnectionString("default")));
+        
+builder.Services.AddTransient<IClienteRepository>(_ => 
+    new ClienteDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
 
 builder.Services.AddSession();

@@ -1,0 +1,57 @@
+@model Ecommerce.Models.LoginViewModel 
+
+@{
+    // PASSO 1: Informa ao ASP.NET Core para NÃO usar o _Layout.cshtml
+    Layout = null; 
+    ViewData["Title"] = "Login";
+}
+
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/style.css"> 
+    <title>@ViewData["Title"] - Empório Irmãs da Terra</title>
+</head>
+<body>
+    
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm custom-card-auth">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="card-title text-center mb-4">Acesso à Sua Conta</h2>
+                        
+                        @if(ViewBag.Error != null) {
+                            <div class="alert alert-danger">@ViewBag.Error</div>
+                        }
+
+                        <form asp-controller="Cliente" asp-action="Login" method="post">
+                            
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                            <div class="mb-3">
+                                <label for="inputEmail" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="inputEmail" name="Email" value="@Model.Email" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="inputPassword" class="form-label">Senha</label>
+                                <input type="password" class="form-control" id="inputPassword" name="Senha" required>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-auth-submit">Entrar</button>
+                            </div>
+                            
+                            <p class="text-center mt-3 mb-0">
+                                Ainda não tem conta? 
+                                <a asp-controller="Cliente" asp-action="Cadastro" class="link-auth-action">Cadastre-se aqui</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
