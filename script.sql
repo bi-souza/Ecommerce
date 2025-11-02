@@ -32,7 +32,8 @@ CREATE TABLE Cliente
     Cpf         varchar(14)     not null     unique,
     Email       varchar(100)    not null,
     Telefone    varchar(14)     not null,
-    DataNasc    date                null   
+    DataNasc    date                null,
+    Senha       varchar(max)    not null 
 )
 
 

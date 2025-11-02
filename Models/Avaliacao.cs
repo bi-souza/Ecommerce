@@ -7,5 +7,5 @@ public class Avaliacao
     public int Nota { get; set; }
     public int ClienteId { get; set; }
     public int ProdutoId { get; set; }
-    public string NomeCliente { get; set; }
+    public string? NomeCliente { get; set; }
 }

@@ -1,5 +1,10 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="pt-br">
+@{
+    
+    var nomeCliente = Context.Session.GetString("NomeCliente");
+}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -31,10 +36,10 @@
 
                 <div class="d-flex nav-icones align-items-center">
                     @{
-                        var usuarioNome = Context.Session.GetString("UsuarioNome");
+                        var nomeCliente = Context.Session.GetString("NomeCliente");
                     }
 
-                    @if (usuarioNome != null)
+                    @if (nomeCliente != null)
                     {
                         <div class="d-flex align-items-start me-3">
                             
@@ -44,7 +49,7 @@
 
                             <div class="d-flex flex-column align-items-start justify-content-center">
                                 <span style="font-size: 0.9em; font-weight: 500; line-height: 1.2;">
-                                    Olá, @usuarioNome!
+                                    Olá, @nomeCliente!
                                 </span>
                                 <a href="#" class="nav-link p-0 text-danger" 
                                 data-bs-toggle="modal" data-bs-target="#modalConfirmacaoLogout" 
@@ -56,7 +61,7 @@
                     }
                     else
                     {
-                        <a class="nav-link d-flex align-items-center me-3" asp-controller="Usuario" asp-action="Login">
+                        <a class="nav-link d-flex align-items-center me-3" asp-controller="Cliente" asp-action="Login">
                             <i class="fa fa-user-circle fa-2x me-2"></i>
                             <div class="d-flex flex-column" style="line-height: 1.2; font-size: 0.9em;">
                                 <span>Entre ou</span>
@@ -136,7 +141,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a asp-controller="Usuario" asp-action="Logout" class="btn btn-danger">
+                    <a asp-controller="Cliente" asp-action="Logout" class="btn btn-danger">
                         Sim, Encerrar Sessão
                     </a>
                 </div>
