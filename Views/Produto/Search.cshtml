@@ -1,0 +1,50 @@
+@model List<Ecommerce.Models.Produto>
+@{
+    ViewData["Title"] = "Resultados da Busca";
+}
+
+<div class="container mt-4">
+
+    <h2>Resultados para: "@ViewBag.TermoBuscado"</h2>
+    <p>@Model.Count produtos encontrados.</p>
+    
+    <hr />
+
+    <div class="row">
+        @if (Model.Count == 0)
+        {
+            <div class="col">
+                <p class="alert alert-warning">Nenhum produto encontrado com esse termo.</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var produto in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card product-card h-100">
+                        
+                        @{
+                            var imagePath = string.IsNullOrEmpty(produto.ImagemUrl) 
+                                            ? "/images/placeholder-produto.jpg" 
+                                            : produto.ImagemUrl;
+                        }
+                        <img src="@imagePath" class="card-img-top" alt="@produto.NomeProduto">
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">@produto.NomeProduto</h5>
+                            <h4 style="color: var(--cor-verde-floresta);">R$ @produto.Preco.ToString("F2")</h4>
+                            
+                            <a asp-controller="Produto" 
+                               asp-action="Detalhes" 
+                               asp-route-id="@produto.IdProduto" 
+                               class="btn btn-outline-success w-100">
+                                Ver Detalhes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

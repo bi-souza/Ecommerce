@@ -11,4 +11,5 @@ public interface IProdutoRepository
     void Create(Produto model);
     void Delete(int id);
     void Update(Produto model);
+    List<Produto> Search(string termo);
 }

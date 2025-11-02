@@ -98,4 +98,15 @@ public class ProdutoController : Controller
 
         return View(listaDeProdutos);
     }
+
+        
+    public ActionResult Search(string termo)
+    {
+        
+        List<Produto> resultados = produtoRepository.Search(termo);        
+        
+        ViewBag.TermoBuscado = termo;
+        
+        return View(resultados);
+    }
 }
