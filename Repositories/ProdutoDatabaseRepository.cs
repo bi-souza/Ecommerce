@@ -181,10 +181,43 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
                 Destaque = (int)reader["Destaque"],
                 CategoriaId = (int)reader["CategoriaId"]
 
-            };            
+            };
             return produto;
-        }        
-        return null; 
+        }
+        return null;
+    }
+    
+    public List<Produto> Search(string termo)
+    {
+        List<Produto> lista = new List<Produto>();
+        
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        
+        cmd.CommandText = "SELECT * FROM Produto WHERE NomeProduto LIKE @termo";
+        cmd.Parameters.AddWithValue("@termo", $"%{termo}%");
+
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {        
+            
+            var produto = new Produto
+            {
+                IdProduto = (int)reader["IdProduto"],
+                NomeProduto = (string)reader["NomeProduto"],
+                Preco = (decimal)reader["Preco"],
+                Estoque = (int)reader["Estoque"],
+                Destaque = (int)reader["Destaque"],
+                CategoriaId = (int)reader["CategoriaId"],
+                Descricao = (string)reader["Descricao"],
+                ImagemUrl = (string)reader["ImagemUrl"] 
+            };        
+
+            lista.Add(produto);
+        }
+
+        return lista;
     }
 
 }
