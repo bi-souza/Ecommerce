@@ -2,24 +2,22 @@ using Ecommerce.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Repositórios
 builder.Services.AddTransient<ICategoriaRepository>(_ => 
     new CategoriaDatabaseRepository(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("default")));
 
 builder.Services.AddTransient<IProdutoRepository>(_ =>
     new ProdutoDatabaseRepository(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("default")));
 
 builder.Services.AddTransient<IAvaliacaoRepository>(_ =>
     new AvaliacaoDatabaseRepository(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("default")));
         
 builder.Services.AddTransient<IClienteRepository>(_ =>
     new ClienteDatabaseRepository(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Configuration.GetConnectionString("default")));
 
-// Sessões e MVC
 builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
 
