@@ -42,10 +42,10 @@
                     @if (nomeCliente != null)
                     {
                         <div class="d-flex align-items-start me-3">
-                            
-                            <span class="nav-link p-0" style="margin-right: 5px; margin-top: 3px;">
+                            <a asp-controller="Cliente" asp-action="Perfil" class="nav-link p-0" 
+                            title="Meu Perfil" style="margin-right: 5px; margin-top: 3px;">
                                 <i class="fa fa-user-circle fa-2x"></i>
-                            </span>
+                            </a>
 
                             <div class="d-flex flex-column align-items-start justify-content-center">
                                 <span style="font-size: 0.9em; font-weight: 500; line-height: 1.2;">
@@ -61,7 +61,8 @@
                     }
                     else
                     {
-                        <a class="nav-link d-flex align-items-center me-3" asp-controller="Cliente" asp-action="Login">
+                        <a class="nav-link d-flex align-items-center me-3" 
+                        asp-controller="Cliente" asp-action="Login">
                             <i class="fa fa-user-circle fa-2x me-2"></i>
                             <div class="d-flex flex-column" style="line-height: 1.2; font-size: 0.9em;">
                                 <span>Entre ou</span>

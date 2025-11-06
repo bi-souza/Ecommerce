@@ -88,5 +88,90 @@ namespace Ecommerce.Repositories
                 return null;
             }
         }
+        public Cliente BuscarPorId(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = "SELECT * FROM Cliente WHERE IdCliente = @Id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new Cliente
+                        {
+                            IdCliente = (int)reader["IdCliente"],
+                            NomeCliente = reader["NomeCliente"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            Cpf = reader["Cpf"].ToString(),
+                            Telefone = reader["Telefone"].ToString(),
+                            DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
+                            SenhaHash = reader["SenhaHash"].ToString()
+                        };
+                    }
+                }
+                return null;
+            }
+        }
+        public void Atualizar(Cliente cliente)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = @"UPDATE Cliente
+                               SET NomeCliente = @NomeCliente,
+                                   Email = @Email,
+                                   Telefone = @Telefone
+                               WHERE IdCliente = @IdCliente";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@NomeCliente", cliente.NomeCliente ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Email", cliente.Email ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? string.Empty);
+                cmd.Parameters.AddWithValue("@IdCliente", cliente.IdCliente);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public bool VerificarSenhaAtual(int id, string senhaAtual)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = "SELECT SenhaHash FROM Cliente WHERE IdCliente = @Id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                if (result == null || result == DBNull.Value) return false;
+                string senhaNoBanco = Convert.ToString(result);
+                return senhaNoBanco == (senhaAtual ?? string.Empty);
+            }
+        }
+
+        public void AlterarSenha(int id, string novaSenha)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = "UPDATE Cliente SET SenhaHash = @SenhaHash WHERE IdCliente = @Id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@SenhaHash", novaSenha ?? string.Empty);
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void Excluir(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string sql = "DELETE FROM Cliente WHERE IdCliente = @Id";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

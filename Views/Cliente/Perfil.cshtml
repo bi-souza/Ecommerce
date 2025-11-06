@@ -1,0 +1,122 @@
+@model Ecommerce.Models.Cliente
+@{
+    ViewData["Title"] = "Meu Perfil";
+}
+
+<div class="container my-5">
+    @if (TempData["Mensagem"] != null)
+    {
+        <div class="alert alert-success">@TempData["Mensagem"]</div>
+    }
+    @if (TempData["ErroSenha"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErroSenha"]</div>
+    }
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="mb-4">Meu Perfil</h4>
+            <form asp-action="EditarPerfil" method="post" id="perfilForm">
+                <input type="hidden" asp-for="IdCliente" />
+                <div class="mb-3">
+                    <label class="form-label">Nome</label>
+                    <input asp-for="NomeCliente" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">CPF</label>
+                    <input asp-for="Cpf" class="form-control" readonly />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">E-mail</label>
+                    <input asp-for="Email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Telefone</label>
+                    <input asp-for="Telefone" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Data de Nascimento</label>
+                    <input asp-for="DataNasc" type="date" class="form-control" readonly />
+                </div>
+                <div class="d-flex justify-content-end gap-2">
+                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                    <button type="button" id="btnCancelar" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+            <hr />
+            <div class="d-flex justify-content-between">
+                <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalSenha">Alterar senha</button>
+                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalExcluir">Excluir minha conta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalSenha" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="AlterarSenha" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label">Senha atual</label>
+                        <input name="senhaAtual" type="password" class="form-control" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Nova senha</label>
+                        <input name="novaSenha" type="password" class="form-control" required />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Confirmar nova senha</label>
+                        <input name="confirmarSenha" type="password" class="form-control" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalExcluir" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Excluir" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger">Excluir conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let alterado = false;
+        document.querySelectorAll('#perfilForm input').forEach(i => {
+            i.addEventListener('input', () => alterado = true);
+        });
+        document.getElementById('btnCancelar').addEventListener('click', function () {
+            if (alterado) {
+                var modalHtml = new bootstrap.Modal(document.createElement('div'));
+                if (confirm('Você tem alterações não salvas. Deseja sair mesmo assim?')) {
+                    window.location.href = '/';
+                }
+            } else {
+                window.location.href = '/';
+            }
+        });
+    </script>
+}
