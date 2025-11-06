@@ -50,7 +50,6 @@ namespace Ecommerce.Controllers
         
         public ActionResult Cadastro(Cliente cliente)
         {
-            // repositorórias
             if (repository.BuscarPorEmail(cliente.Email) != null)
             {
                 ViewBag.Error = "E-mail já cadastrado.";
