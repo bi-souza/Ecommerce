@@ -1,7 +1,7 @@
 @model Ecommerce.Models.LoginViewModel 
 
 @{
-    // PASSO 1: Informa ao ASP.NET Core para NÃO usar o _Layout.cshtml
+    
     Layout = null; 
     ViewData["Title"] = "Login";
 }
@@ -41,6 +41,7 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-auth-submit">Entrar</button>
+                                <a asp-controller="Produto" asp-action="Index" class="btn btn-dark mt-3" style="white-space: normal; line-height: 1.2;">Entrar como Administrador (Acesso Rápido)</a>
                             </div>
                             
                             <p class="text-center mt-3 mb-0">

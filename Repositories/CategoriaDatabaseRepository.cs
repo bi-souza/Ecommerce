@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
 using Ecommerce.Models; 
-using System.Collections.Generic;
 namespace Ecommerce.Repositories;
 
 public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
