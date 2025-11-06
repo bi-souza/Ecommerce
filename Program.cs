@@ -4,7 +4,6 @@ using Ecommerce.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Repositórios
 builder.Services.AddTransient<ICategoriaRepository>(_ => 
     new CategoriaDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
