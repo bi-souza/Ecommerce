@@ -1,5 +1,7 @@
 
 using Ecommerce.Repositories;
+using Ecommerce.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,8 @@ builder.Services.AddTransient<IAvaliacaoRepository>(_ =>
 builder.Services.AddTransient<IClienteRepository>(_ => 
     new ClienteDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
+
+builder.Services.AddSingleton<PixService>();
 
 builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
