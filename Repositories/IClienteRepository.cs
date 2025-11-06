@@ -1,4 +1,4 @@
-namespace Ecommerce.Repositories; // (Use o seu namespace)
+namespace Ecommerce.Repositories; 
 
 using Ecommerce.Models;
 

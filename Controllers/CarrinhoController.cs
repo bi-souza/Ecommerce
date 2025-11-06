@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Linq;
 using System.Collections.Generic;
-using Ecommerce;                 // precisa para reconhecer [RequireLogin]
+using Ecommerce;                 
 using Ecommerce.Models;
-using Ecommerce.Repositories;    // IProdutoRepository
+using Ecommerce.Repositories;    
 
 namespace Ecommerce.Controllers
 {

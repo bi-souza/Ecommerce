@@ -16,7 +16,7 @@ public class AvaliacaoController : Controller
     public ActionResult Create(Avaliacao model)
     {
 
-        var clienteId = (int)HttpContext.Session.GetInt32("ClienteId");       
+        var clienteId = (int)HttpContext.Session.GetInt32("ClienteId");
 
         model.ClienteId = clienteId;
 
@@ -25,11 +25,11 @@ public class AvaliacaoController : Controller
         return RedirectToAction("Detalhes", "Produto", new { id = model.ProdutoId });
     }
     
+    [HttpPost]
     public ActionResult Delete(int id) 
     {
-        var clienteId = (int)HttpContext.Session.GetInt32("ClienteId");       
-       
-        
+        var clienteId = (int)HttpContext.Session.GetInt32("ClienteId");     
+               
         var produtoId = id; 
         
         repository.Delete(clienteId, produtoId);        
@@ -43,8 +43,7 @@ public class AvaliacaoController : Controller
     {
 
         var clienteId = (int)HttpContext.Session.GetInt32("ClienteId");     
-        
-                
+                        
         var avaliacao = repository.Read(clienteId, id);      
         
         return View(avaliacao);
