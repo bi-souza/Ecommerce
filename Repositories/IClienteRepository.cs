@@ -1,8 +1,11 @@
-namespace Ecommerce.Repositories; // (Use o seu namespace)
-
-using Ecommerce.Models;
-
-public interface IClienteRepository
+namespace Ecommerce.Repositories
 {
-    Cliente Login(LoginViewModel model); 
+    using Ecommerce.Models;
+
+    public interface IClienteRepository
+    {
+        Cliente Login(LoginViewModel model);
+        void Cadastrar(Cliente cliente);
+        Cliente BuscarPorEmail(string email);
+    }
 }
