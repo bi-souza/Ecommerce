@@ -1,6 +1,5 @@
 using Microsoft.Data.SqlClient;
 using Ecommerce.Models; 
-using System.Collections.Generic;
 
 namespace Ecommerce.Repositories;
 
@@ -32,19 +31,14 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
     }
 
     public void Delete(int id)
-    {
-        // 1. Cria o comando
+    {        
         SqlCommand cmd = new SqlCommand();
-        cmd.Connection = conn; // Usa a conexão da classe base
-
-        // 2. Define o comando SQL
-        // (Assumindo que sua chave primária é 'IdProduto' como no seu Model)
+        cmd.Connection = conn;
+        
         cmd.CommandText = "DELETE FROM Produto WHERE IdProduto = @id";
-
-        // 3. Adiciona o parâmetro de ID
+        
         cmd.Parameters.AddWithValue("@id", id);
-
-        // 4. Executa o comando
+        
         cmd.ExecuteNonQuery();
     }
     
@@ -52,8 +46,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-
-        // Comando SQL de atualização
+        
         cmd.CommandText = @"UPDATE Produto 
                             SET NomeProduto = @nome, 
                                 Descricao = @desc, 
@@ -62,18 +55,15 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
                                 ImagemUrl = @img, 
                                 Destaque = @destaque, 
                                 CategoriaId = @catId
-                            WHERE IdProduto = @id"; // A condição WHERE é crucial
-
-        // Adiciona todos os parâmetros
+                            WHERE IdProduto = @id"; 
+        
         cmd.Parameters.AddWithValue("@nome", model.NomeProduto);
         cmd.Parameters.AddWithValue("@desc", model.Descricao);
         cmd.Parameters.AddWithValue("@preco", model.Preco);
         cmd.Parameters.AddWithValue("@estoque", model.Estoque);
         cmd.Parameters.AddWithValue("@img", model.ImagemUrl);
         cmd.Parameters.AddWithValue("@destaque", model.Destaque);
-        cmd.Parameters.AddWithValue("@catId", model.CategoriaId);
-        
-        // Adiciona o ID para a cláusula WHERE
+        cmd.Parameters.AddWithValue("@catId", model.CategoriaId);      
         cmd.Parameters.AddWithValue("@id", model.IdProduto);
 
         cmd.ExecuteNonQuery();
@@ -139,11 +129,11 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         List<Produto> lista = new List<Produto>();
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "SELECT * FROM Produto"; // (Poderia ter um JOIN com Categoria)
+        cmd.CommandText = "SELECT * FROM Produto"; 
 
         SqlDataReader reader = cmd.ExecuteReader();
 
-        while (reader.Read()) // Loop em todos os resultados
+        while (reader.Read()) 
         {
             lista.Add(new Produto
             {

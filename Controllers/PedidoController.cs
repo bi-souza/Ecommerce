@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Linq;
 using Ecommerce.Models;
-using Ecommerce.Services; // Pix
+using Ecommerce.Services; 
 using Ecommerce; 
 
 
@@ -12,7 +12,7 @@ namespace Ecommerce.Controllers
 {
     public class PedidoController : Controller
     {
-        // QR Code PIX
+        
         private readonly PixService _pixService;
 
         public PedidoController(PixService pixService)
@@ -29,7 +29,7 @@ namespace Ecommerce.Controllers
 
 
         [HttpGet]
-        [RequireLogin] // exige login para ir ao pagamento
+        [RequireLogin] 
         public IActionResult Pagamento()
         {
            
@@ -89,7 +89,7 @@ namespace Ecommerce.Controllers
                 Simulate     = true
             };
 
-            return View(vm); // Views/Pedido/Pagamento.cshtml
+            return View(vm); 
         }
 
         [HttpPost]
@@ -150,7 +150,7 @@ namespace Ecommerce.Controllers
         public IActionResult Confirmado()
         {
             ViewBag.Msg = TempData["Msg"];
-            return View(); // Views/Pedido/Confirmado.cshtml
+            return View(); 
         }
 
         private List<CartItem> ReadCart()
@@ -161,7 +161,7 @@ namespace Ecommerce.Controllers
                 : (JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>());
         }
 
-        // Insere o Pedido e retorna o Id gerado (IDENTITY)
+        
         private static int InsertPedido(SqlConnection con, SqlTransaction tx, int clienteId, decimal total)
         {
             using var cmd = new SqlCommand(@"
@@ -175,7 +175,7 @@ namespace Ecommerce.Controllers
             return System.Convert.ToInt32(cmd.ExecuteScalar());
         }
 
-        // Insere cada item do pedido
+        
         private static void InsertItem(SqlConnection con, SqlTransaction tx, int pedidoId, CartItem it)
         {
             using var cmd = new SqlCommand(@"

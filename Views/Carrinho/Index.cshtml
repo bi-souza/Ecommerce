@@ -27,8 +27,7 @@ else
         {
             <tr>
                 <td>
-                    <div style="display:flex; gap:12px; align-items:center;">
-                        @* Mostra imagem se existir *@
+                    <div style="display:flex; gap:12px; align-items:center;">                        
                         @if (!string.IsNullOrWhiteSpace(i.ImagemUrl))
                         {
                             <img src="@i.ImagemUrl" alt="@i.NomeProduto" style="width:48px;height:48px;object-fit:cover;border-radius:6px;" />
