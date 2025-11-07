@@ -1,19 +1,19 @@
-using Microsoft.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
 
-namespace Ecommerce.Repositories;
+    namespace Ecommerce.Repositories;
 
-public abstract class DbConnection : IDisposable
-{
-    protected SqlConnection conn;
-
-    public DbConnection(string? connStr)
+    public abstract class DbConnection : IDisposable
     {
-        conn = new SqlConnection(connStr);
-        conn.Open();
-    }
+        protected SqlConnection conn;
 
-    public void Dispose()
-    {
-        conn.Close();
+        public DbConnection(string? connStr)
+        {
+            conn = new SqlConnection(connStr);
+            conn.Open();
+        }
+
+        public void Dispose()
+        {
+            conn.Close();
+        }
     }
-}

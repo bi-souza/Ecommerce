@@ -33,7 +33,8 @@ CREATE TABLE Cliente
     Email       varchar(100)    not null,
     Telefone    varchar(14)     not null,
     DataNasc    date                null,
-    Senha       varchar(max)    not null 
+    SenhaHash   NVARCHAR(255)   NOT NULL,
+    IsAdmin     BIT             NOT NULL     DEFAULT 0
 )
 
 
@@ -89,6 +90,9 @@ INSERT INTO Categoria (NomeCategoria) VALUES ('Suplementos Naturais');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Queijos e Laticínios');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Vinhos e Bebidas');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Grãos e Cereais');
+
+INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc, Senha)
+VALUES ('Administrador', '00000000000', 'admin@admin.com', '000000000', GETDATE(), 'admin123');
 
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Chá de Camomila', 'Flores de camomila secas para infusão. Pacote 30g.', 14.50, 50, '/images/produtos/cha-de-camomila.jpg', 0, 1);
