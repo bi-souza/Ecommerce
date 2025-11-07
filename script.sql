@@ -91,7 +91,7 @@ INSERT INTO Categoria (NomeCategoria) VALUES ('Queijos e Laticínios');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Vinhos e Bebidas');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Grãos e Cereais');
 
-INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc, Senha)
+INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc, SenhaHash)
 VALUES ('Administrador', '00000000000', 'admin@admin.com', '000000000', GETDATE(), 'admin123');
 
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 

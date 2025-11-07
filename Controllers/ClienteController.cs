@@ -43,7 +43,7 @@ namespace Ecommerce.Controllers
 
         public ActionResult Cadastro()
         {
-            return View();
+            return View(new Cliente());
         }
 
         [HttpPost]
@@ -86,6 +86,11 @@ namespace Ecommerce.Controllers
             if (id == null)
                 return RedirectToAction("Login");
             var cliente = repository.BuscarPorId(id.Value);
+            if (cliente == null) // ⚠️ Adicionado para evitar passar null para a view
+        {
+            HttpContext.Session.Clear(); // Limpa sessão inválida
+            return RedirectToAction("Login");
+        }
             return View(cliente);
         }
 
