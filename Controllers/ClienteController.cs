@@ -47,7 +47,7 @@ namespace Ecommerce.Controllers
         }
 
         [HttpPost]
-        
+
         public ActionResult Cadastro(Cliente cliente)
         {
             if (repository.BuscarPorEmail(cliente.Email) != null)
@@ -79,6 +79,69 @@ namespace Ecommerce.Controllers
 
             TempData["Mensagem"] = "Cadastro realizado com sucesso!";
             return RedirectToAction("Login", "Cliente");
+        }
+        public ActionResult Perfil()
+        {
+            var id = HttpContext.Session.GetInt32("ClienteId");
+            if (id == null)
+                return RedirectToAction("Login");
+            var cliente = repository.BuscarPorId(id.Value);
+            return View(cliente);
+        }
+
+        [HttpPost]
+        public ActionResult EditarPerfil(Cliente cliente)
+        {
+            if (!ModelState.IsValid)
+                return View("Perfil", cliente);
+            var existente = repository.BuscarPorEmail(cliente.Email);
+            if (existente != null && existente.IdCliente != cliente.IdCliente)
+            {
+                ViewBag.Error = "E-mail já cadastrado por outro usuário.";
+                return View("Perfil", cliente);
+            }
+            repository.Atualizar(cliente);
+            TempData["Mensagem"] = "Perfil atualizado com sucesso!";
+            return RedirectToAction("Perfil");
+        }
+
+        [HttpPost]
+        public ActionResult AlterarSenha(string senhaAtual, string novaSenha, string confirmarSenha)
+        {
+            var id = HttpContext.Session.GetInt32("ClienteId");
+            if (id == null)
+                return RedirectToAction("Login");
+            if (novaSenha != confirmarSenha)
+            {
+                TempData["ErroSenha"] = "As novas senhas não conferem.";
+                return RedirectToAction("Perfil");
+            }
+            if (novaSenha.Length < 7 || !System.Text.RegularExpressions.Regex.IsMatch(novaSenha, "[A-Za-z]") || !System.Text.RegularExpressions.Regex.IsMatch(novaSenha, "[0-9]"))
+            {
+                TempData["ErroSenha"] = "A nova senha deve ter pelo menos 7 caracteres, incluindo uma letra e um número.";
+                return RedirectToAction("Perfil");
+            }
+            bool valida = repository.VerificarSenhaAtual(id.Value, senhaAtual);
+            if (!valida)
+            {
+                TempData["ErroSenha"] = "A senha atual está incorreta.";
+                return RedirectToAction("Perfil");
+            }
+            repository.AlterarSenha(id.Value, novaSenha);
+            TempData["Mensagem"] = "Senha alterada com sucesso!";
+            return RedirectToAction("Perfil");
+        }
+
+        [HttpPost]
+        public ActionResult Excluir()
+        {
+            var id = HttpContext.Session.GetInt32("ClienteId");
+            if (id != null)
+            {
+                repository.Excluir(id.Value);
+                HttpContext.Session.Clear();
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }
