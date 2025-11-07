@@ -1,4 +1,6 @@
 using Ecommerce.Repositories;
+using Ecommerce.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,8 @@ builder.Services.AddTransient<IClienteRepository>(_ =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Sessões e MVC
+builder.Services.AddSingleton<PixService>();
+
 builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
 

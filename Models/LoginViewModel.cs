@@ -1,4 +1,4 @@
-namespace Ecommerce.Models; // (Use o seu namespace)
+namespace Ecommerce.Models; 
 
 public class LoginViewModel
 {
