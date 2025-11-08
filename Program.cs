@@ -15,15 +15,20 @@ builder.Services.AddTransient<IProdutoRepository>(_ =>
 builder.Services.AddTransient<IAvaliacaoRepository>(_ =>
     new AvaliacaoDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
-        
+
 builder.Services.AddTransient<IClienteRepository>(_ =>
     new ClienteDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
 
+builder.Services.AddTransient<IAdministradorRepository>(_ =>
+    new AdministradorDatabaseRepository(
+        builder.Configuration.GetConnectionString("default")));
+        
 builder.Services.AddSingleton<PixService>();
 
 builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

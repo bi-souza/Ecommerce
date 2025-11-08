@@ -17,7 +17,10 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Cliente WHERE Email = @Email AND SenhaHash = @SenhaHash";
+                string sql = @"SELECT P.*, C.IdCliente
+                               FROM Pessoa P
+                               INNER JOIN Cliente C ON P.IdPessoa = C.IdCliente
+                               WHERE P.Email = @Email AND P.SenhaHash = @SenhaHash";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Email", model.Email ?? string.Empty);
                 cmd.Parameters.AddWithValue("@SenhaHash", model.Senha ?? string.Empty);
@@ -30,7 +33,7 @@ namespace Ecommerce.Repositories
                         return new Cliente
                         {
                             IdCliente = (int)reader["IdCliente"],
-                            NomeCliente = reader["NomeCliente"].ToString(),
+                            Nome = reader["Nome"].ToString(),
                             Email = reader["Email"].ToString(),
                             Cpf = reader["Cpf"].ToString(),
                             Telefone = reader["Telefone"].ToString(),
@@ -48,18 +51,63 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = @"INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc, SenhaHash)
-                               VALUES (@NomeCliente, @Cpf, @Email, @Telefone, @DataNasc, @SenhaHash)";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@NomeCliente", cliente.NomeCliente);
-                cmd.Parameters.AddWithValue("@Cpf", cliente.Cpf);
-                cmd.Parameters.AddWithValue("@Email", cliente.Email);
-                cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone);
-                cmd.Parameters.AddWithValue("@DataNasc", cliente.DataNasc);
-                cmd.Parameters.AddWithValue("@SenhaHash", cliente.SenhaHash);
-
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                
+                // 1. INICIAR TRANSAÇÃO: Garante que as duas inserções (Pessoa e Cliente)
+                // sejam tratadas como uma única unidade de trabalho.
+                SqlTransaction tx = conn.BeginTransaction();
+                
+                try
+                {
+                    // 2. INSERÇÃO NA TABELA PESSOA: Insere os dados básicos e recupera o ID gerado (IdPessoa).
+                    string sqlPessoa = @"
+                        INSERT INTO Pessoa (Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
+                        VALUES (@Nome, @Cpf, @Email, @Telefone, @DataNasc, @SenhaHash);
+                        SELECT CAST(scope_identity() AS INT);"; 
+                        
+                    using (SqlCommand cmdPessoa = new SqlCommand(sqlPessoa, conn, tx))
+                    {
+                        // Mapeamos a propriedade NomeCliente para a nova coluna Nome da tabela Pessoa
+                        cmdPessoa.Parameters.AddWithValue("@Nome", cliente.Nome ?? string.Empty);
+                        cmdPessoa.Parameters.AddWithValue("@Cpf", cliente.Cpf ?? string.Empty);
+                        cmdPessoa.Parameters.AddWithValue("@Email", cliente.Email ?? string.Empty);
+                        cmdPessoa.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? string.Empty);
+                        cmdPessoa.Parameters.AddWithValue("@DataNasc", cliente.DataNasc);
+                        cmdPessoa.Parameters.AddWithValue("@SenhaHash", cliente.SenhaHash ?? string.Empty);
+                        
+                        // ExecuteScalar obtém o IdPessoa recém-criado (SCOP_IDENTITY)
+                        object result = cmdPessoa.ExecuteScalar();
+                        if (result == null) throw new InvalidOperationException("Falha ao obter o IdPessoa após a inserção.");
+                        int idCliente = Convert.ToInt32(result);
+
+                        // 3. INSERÇÃO NA TABELA CLIENTE: Usa o IdPessoa recém-criado como a chave primária/estrangeira.
+                        string sqlCliente = "INSERT INTO Cliente (IdCliente) VALUES (@IdCliente)";
+
+                        using (SqlCommand cmdCliente = new SqlCommand(sqlCliente, conn, tx))
+                        {
+                            cmdCliente.Parameters.AddWithValue("@IdCliente", idCliente);
+                            cmdCliente.ExecuteNonQuery();
+                        }
+                    }
+
+                    // 4. COMMIT: Confirma as alterações no banco de dados.
+                    tx.Commit();
+                }
+                catch (Exception)
+                {
+                    // 5. ROLLBACK: Em caso de erro, reverte todas as operações desta transação.
+                    try
+                    {
+                        tx.Rollback();
+                    }
+                    catch 
+                    { 
+                        // Ignorar erros no Rollback.
+                    }
+                    
+                    // Re-lança a exceção para que o Controller possa tratar.
+                    throw; 
+                }
             }
         }
 
@@ -67,7 +115,13 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Cliente WHERE Email = @Email";
+                // AJUSTE: Query com INNER JOIN em Pessoa e Cliente
+                string sql = @"
+                    SELECT P.*, C.IdCliente 
+                    FROM Pessoa P
+                    INNER JOIN Cliente C ON P.IdPessoa = C.IdCliente
+                    WHERE P.Email = @Email";
+                    
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Email", email);
 
@@ -79,7 +133,8 @@ namespace Ecommerce.Repositories
                     return new Cliente
                     {
                         IdCliente = (int)reader["IdCliente"],
-                        NomeCliente = reader["NomeCliente"].ToString(),
+                        // AJUSTE: NomeCliente alterado para Nome
+                        Nome = reader["Nome"].ToString(), 
                         Email = reader["Email"].ToString(),
                         Cpf = reader["Cpf"].ToString()
                     };
@@ -92,7 +147,13 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT * FROM Cliente WHERE IdCliente = @Id";
+                // AJUSTE: Query com INNER JOIN em Pessoa e Cliente, filtrando por IdCliente
+                string sql = @"
+                    SELECT P.*, C.IdCliente 
+                    FROM Pessoa P
+                    INNER JOIN Cliente C ON P.IdPessoa = C.IdCliente
+                    WHERE C.IdCliente = @Id";
+
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 conn.Open();
@@ -103,7 +164,8 @@ namespace Ecommerce.Repositories
                         return new Cliente
                         {
                             IdCliente = (int)reader["IdCliente"],
-                            NomeCliente = reader["NomeCliente"].ToString(),
+                            // AJUSTE: NomeCliente alterado para Nome
+                            Nome = reader["Nome"].ToString(), 
                             Email = reader["Email"].ToString(),
                             Cpf = reader["Cpf"].ToString(),
                             Telefone = reader["Telefone"].ToString(),
@@ -119,13 +181,16 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = @"UPDATE Cliente
-                               SET NomeCliente = @NomeCliente,
+                // AJUSTE: Altera a tabela alvo para Pessoa e a coluna para Nome
+                string sql = @"UPDATE Pessoa
+                               SET Nome = @Nome,
                                    Email = @Email,
                                    Telefone = @Telefone
-                               WHERE IdCliente = @IdCliente";
+                               WHERE IdPessoa = @IdCliente";
+                
                 SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@NomeCliente", cliente.NomeCliente ?? string.Empty);
+                // AJUSTE: NomeCliente alterado para Nome no parâmetro
+                cmd.Parameters.AddWithValue("@Nome", cliente.Nome ?? string.Empty);
                 cmd.Parameters.AddWithValue("@Email", cliente.Email ?? string.Empty);
                 cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? string.Empty);
                 cmd.Parameters.AddWithValue("@IdCliente", cliente.IdCliente);
@@ -138,7 +203,8 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "SELECT SenhaHash FROM Cliente WHERE IdCliente = @Id";
+                // AJUSTE: Altera a tabela alvo para Pessoa
+                string sql = "SELECT SenhaHash FROM Pessoa WHERE IdPessoa = @Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 conn.Open();
@@ -153,7 +219,8 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "UPDATE Cliente SET SenhaHash = @SenhaHash WHERE IdCliente = @Id";
+                // AJUSTE: Altera a tabela alvo para Pessoa
+                string sql = "UPDATE Pessoa SET SenhaHash = @SenhaHash WHERE IdPessoa = @Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@SenhaHash", novaSenha ?? string.Empty);
                 cmd.Parameters.AddWithValue("@Id", id);
@@ -166,11 +233,33 @@ namespace Ecommerce.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string sql = "DELETE FROM Cliente WHERE IdCliente = @Id";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+                SqlTransaction tx = conn.BeginTransaction(); // INÍCIO DA TRANSAÇÃO
+                try
+                {
+                    // 1. Excluir da tabela Cliente (para respeitar a FK)
+                    string sqlCliente = "DELETE FROM Cliente WHERE IdCliente = @Id";
+                    using (SqlCommand cmdCliente = new SqlCommand(sqlCliente, conn, tx))
+                    {
+                        cmdCliente.Parameters.AddWithValue("@Id", id);
+                        cmdCliente.ExecuteNonQuery();
+                    }
+                    
+                    // 2. Excluir da tabela Pessoa
+                    string sqlPessoa = "DELETE FROM Pessoa WHERE IdPessoa = @Id";
+                    using (SqlCommand cmdPessoa = new SqlCommand(sqlPessoa, conn, tx))
+                    {
+                        cmdPessoa.Parameters.AddWithValue("@Id", id);
+                        cmdPessoa.ExecuteNonQuery();
+                    }
+
+                    tx.Commit(); // COMMIT DA TRANSAÇÃO
+                }
+                catch (Exception)
+                {
+                    try { tx.Rollback(); } catch { /* ignore */ }
+                    throw;
+                }
             }
         }
     }

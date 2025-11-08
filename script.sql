@@ -4,6 +4,31 @@ GO
 USE BDEcommerce
 GO
 
+CREATE TABLE Pessoa
+(
+    IdPessoa    int             primary key  identity,
+    Nome        varchar(700)    not null,
+    Cpf         varchar(14)     not null     unique,
+    Email       varchar(100)    not null     unique,
+    Telefone    varchar(14)     not null,
+    DataNasc    date                null,
+    SenhaHash   nvarchar(255)   not null
+);
+
+CREATE TABLE Cliente
+(
+    IdCliente     int           not null     primary key,    
+    
+    foreign key (IdCliente) references Pessoa(IdPessoa) 
+);
+
+CREATE TABLE Administrador
+(
+    IdAdmin       int           not null     primary key,    
+    
+    foreign key (IdAdmin) references Pessoa(IdPessoa)
+);
+
 CREATE TABLE Categoria
 (
     IdCategoria   int          not null    primary key  identity,
@@ -22,19 +47,6 @@ CREATE TABLE Produto
     Destaque    int            not null     check (Destaque in (0, 1)) default 0, 
     CategoriaId int            not null,    
     foreign key (CategoriaId)  references  Categoria(IdCategoria)  
-)
-
-
-CREATE TABLE Cliente
-(
-    IdCliente   int             primary key  identity,
-    NomeCliente varchar(700)    not null,
-    Cpf         varchar(14)     not null     unique,
-    Email       varchar(100)    not null,
-    Telefone    varchar(14)     not null,
-    DataNasc    date                null,
-    SenhaHash   NVARCHAR(255)   NOT NULL,
-    IsAdmin     BIT             NOT NULL     DEFAULT 0
 )
 
 
@@ -91,9 +103,6 @@ INSERT INTO Categoria (NomeCategoria) VALUES ('Queijos e Laticínios');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Vinhos e Bebidas');
 INSERT INTO Categoria (NomeCategoria) VALUES ('Grãos e Cereais');
 
-INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc, Senha)
-VALUES ('Administrador', '00000000000', 'admin@admin.com', '000000000', GETDATE(), 'admin123');
-
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Chá de Camomila', 'Flores de camomila secas para infusão. Pacote 30g.', 14.50, 50, '/images/produtos/cha-de-camomila.jpg', 0, 1);
 
@@ -120,6 +129,3 @@ VALUES ('Vinho Tinto', 'Vinho tinto seco orgânico nacional. Garrafa 750ml.', 72
 
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Quinoa Real em Grãos', 'Grãos de Quinoa Real orgânica. Pacote 250g.', 19.90, 40, '/images/produtos/quinoa-graos.jpg', 1, 6);
-
-INSERT INTO Cliente (NomeCliente, Cpf, Email, Telefone, DataNasc)
-VALUES ('Maria da Silva', '123.456.789-00', 'maria.silva@exemplo.com', '11987654321', '1990-05-15');
