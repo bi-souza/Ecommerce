@@ -12,42 +12,13 @@ namespace Ecommerce.Controllers
         {
             this.repository = repository;
         }
-
-        public ActionResult Login()
-        {
-            return View(new LoginViewModel());
-        }
-
-        [HttpPost]
-        public ActionResult Login(LoginViewModel model)
-        {
-            Cliente cliente = repository.Login(model);
-
-            if (cliente == null)
-            {
-                ViewBag.Error = "Usuário ou senha inválidos";
-                return View(model);
-            }
-
-            HttpContext.Session.SetInt32("ClienteId", cliente.IdCliente);
-            HttpContext.Session.SetString("NomeCliente", cliente.NomeCliente);
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public ActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Login");
-        }
-
+        
         public ActionResult Cadastro()
         {
             return View();
         }
 
         [HttpPost]
-
         public ActionResult Cadastro(Cliente cliente)
         {
             if (repository.BuscarPorEmail(cliente.Email) != null)

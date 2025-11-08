@@ -36,9 +36,10 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;        
         
-        cmd.CommandText = @"SELECT A.*, C.NomeCliente as NomeCliente 
+        cmd.CommandText = @"SELECT A.*, P.Nome as NomeCliente 
                             FROM Avaliacao A 
                             JOIN Cliente C ON A.ClienteId = C.IdCliente
+                            JOIN Pessoa P ON C.IdCliente = P.IdPessoa  -- Novo JOIN
                             WHERE A.ProdutoId = @produtoId
                             ORDER BY A.DataAvaliacao DESC";
 
@@ -53,7 +54,7 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
                 DataAvaliacao = (DateTime)reader["DataAvaliacao"],
                 ClienteId = (int)reader["ClienteId"],
                 ProdutoId = (int)reader["ProdutoId"],
-                NomeCliente = (string)reader["NomeCliente"]
+                Nome = (string)reader["NomeCliente"]
                 
             };
             
@@ -86,10 +87,11 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = @"SELECT A.*, C.NomeCliente as NomeCliente 
+        cmd.CommandText = @"SELECT A.*, P.Nome as NomeCliente 
                             FROM Avaliacao A 
-                            JOIN Cliente C ON A.ClienteId = C.IdCliente 
-                            WHERE A.ClienteId = @clienteId AND A.ProdutoId = @produtoId";
+                            JOIN Cliente C ON A.ClienteId = C.IdCliente
+                            JOIN Pessoa P ON C.IdCliente = P.IdPessoa  -- Novo JOIN
+                            WHERE A.ProdutoId = @produtoId";
 
         cmd.Parameters.AddWithValue("@clienteId", clienteId);
         cmd.Parameters.AddWithValue("@produtoId", produtoId);
@@ -104,7 +106,7 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
                 DataAvaliacao = (DateTime)reader["DataAvaliacao"],
                 ClienteId = (int)reader["ClienteId"],
                 ProdutoId = (int)reader["ProdutoId"],
-                NomeCliente = (string)reader["NomeCliente"]
+                Nome = (string)reader["NomeCliente"]
                 
             };
 

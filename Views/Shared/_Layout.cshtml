@@ -1,6 +1,8 @@
 ﻿
 <!DOCTYPE html>
 <html lang="pt-br">
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     
     var nomeCliente = Context.Session.GetString("NomeCliente");
@@ -62,7 +64,7 @@
                     else
                     {
                         <a class="nav-link d-flex align-items-center me-3" 
-                        asp-controller="Cliente" asp-action="Login">
+                        asp-controller="Auth" asp-action="Login">
                             <i class="fa fa-user-circle fa-2x me-2"></i>
                             <div class="d-flex flex-column" style="line-height: 1.2; font-size: 0.9em;">
                                 <span>Entre ou</span>
@@ -115,11 +117,24 @@
                     <div class="social-icons">
                         <a href="https://www.facebook.com/emporioirmasdaterra/"><i class="fab fa-facebook-f"></i></a>
                         <a href="https://www.instagram.com/emporioirmasdaterra/"><i class="fab fa-instagram"></i></a>
+                            @{
+                                // Obtém o valor do Papel da Sessão.
+                                string papel = HttpContextAccessor.HttpContext.Session.GetString("Papel");
+                            }
+
+                            @if (papel == "Admin")
+                            {
+                                // NOVO LINK FLUTUANTE PARA O ADMIN
+                                <a asp-controller="Produto" asp-action="Index" class="admin-float" title="Gerenciar Produtos">
+                                    <i class="fas fa-cog"></i> 
+                                </a>
+                            }
+
                         <a href="https://wa.me/5517981250517"><i class="fab fa-whatsapp"></i></a>                       
                                                
                     </div>
                 </div>
-                </div>
+            </div>
             <hr style="border-color: rgba(255,255,255,0.2);">
             <p>&copy; @DateTime.Now.Year - Empório Irmãs da Terra</p>
         </div>
@@ -142,7 +157,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a asp-controller="Cliente" asp-action="Logout" class="btn btn-danger">
+                    <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger">
                         Sim, Encerrar Sessão
                     </a>
                 </div>

@@ -231,3 +231,45 @@ header {
 .whatsapp-float:hover {
     color: #FFF;
 }
+
+/* Estilo do Botão de Gerenciamento do Admin */
+.admin-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 85px; /* POSICIONAMENTO: 60px (ícone) + 20px (margem) acima do ícone do WhatsApp */
+    right: 25px;
+    background-color: var(--cor-verde-floresta); 
+    color: #fff;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    font-size: 24px;
+    z-index: 99; 
+    line-height: 60px; /* Centraliza verticalmente o ícone */
+}
+
+
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 20px; 
+    right: 40px;
+    background-color: #25d366;
+    color: #fff;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 2px 2px 3px #999;
+    font-size: 24px;
+    z-index: 100;
+    line-height: 60px;
+}
+
+
+/* Hover simples para feedback visual */
+.admin-float:hover {
+    color: #fff;
+    background-color: var(--cor-verde-escuro);
+    text-decoration: none;
+}
