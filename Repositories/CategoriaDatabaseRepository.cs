@@ -5,21 +5,88 @@ namespace Ecommerce.Repositories;
 public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
 {
     public CategoriaDatabaseRepository(string? strConn) : base(strConn) { }
+    
+    public void Create(Categoria categoria)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        
+        cmd.CommandText = "INSERT INTO Categoria (NomeCategoria) VALUES (@NomeCategoria)";
 
-    public List<Categoria> Read()
+        cmd.Parameters.AddWithValue("@NomeCategoria", categoria.NomeCategoria ?? string.Empty);
+
+        cmd.ExecuteNonQuery();
+    }
+
+    public List<Categoria> ReadAll()
     {
         List<Categoria> lista = new List<Categoria>();
         SqlCommand cmd = new SqlCommand("SELECT * FROM Categoria", conn);
-        SqlDataReader reader = cmd.ExecuteReader();
-        while (reader.Read())
+        
+        using (SqlDataReader reader = cmd.ExecuteReader())
         {
-            lista.Add(new Categoria
+            while (reader.Read())
             {
-                IdCategoria = (int)reader["IdCategoria"],
-                NomeCategoria = (string)reader["NomeCategoria"]
-            });
-        }        
+                lista.Add(new Categoria
+                {
+                    IdCategoria = (int)reader["IdCategoria"],
+                    NomeCategoria = (string)reader["NomeCategoria"]
+                });
+            }
+        }
         return lista;
-    }    
+    }
+    
+    
+    public Categoria ReadById(int id)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        
+        cmd.CommandText = "SELECT * FROM Categoria WHERE IdCategoria = @IdCategoria";
+        
+        cmd.Parameters.AddWithValue("@IdCategoria", id);
+        
+        using (SqlDataReader reader = cmd.ExecuteReader())
+        {
+            if (reader.Read())
+            {
+                return new Categoria
+                {
+                    IdCategoria = (int)reader["IdCategoria"],
+                    NomeCategoria = (string)reader["NomeCategoria"]
+                };
+            }
+        }
+        return null;
+    }
+    
+    
+    public void Update(Categoria categoria)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        
+        cmd.CommandText = "UPDATE Categoria SET NomeCategoria = @NomeCategoria WHERE IdCategoria = @IdCategoria";
+        
+        cmd.Parameters.AddWithValue("@NomeCategoria", categoria.NomeCategoria ?? string.Empty);
+        cmd.Parameters.AddWithValue("@IdCategoria", categoria.IdCategoria);
+
+        cmd.ExecuteNonQuery();
+    } 
+
+    
+    public void Delete(int id)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;
+        
+        cmd.CommandText = "DELETE FROM Categoria WHERE IdCategoria = @IdCategoria";
+        
+        cmd.Parameters.AddWithValue("@IdCategoria", id);
+
+        cmd.ExecuteNonQuery();
+    }   
+
     
 }

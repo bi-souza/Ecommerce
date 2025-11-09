@@ -16,10 +16,7 @@ namespace Ecommerce.Repositories
         public Pessoa Login(LoginViewModel model)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                // AJUSTE CRÍTICO: INNER JOIN com a tabela Administrador
-                // A query busca um registro na tabela Pessoa (P) que possua o Email e SenhaHash corretos
-                // E, OBRIGATORIAMENTE, um registro correspondente na tabela Administrador (A)
+            {                
                 string sql = @"
                     SELECT P.*, A.IdAdmin 
                     FROM Pessoa P 
@@ -35,8 +32,7 @@ namespace Ecommerce.Repositories
                 {
                     if (reader.Read())
                     {
-                        // Mapeia os dados da Pessoa (que é o administrador logado)
-                        // A propriedade IdPessoa e as demais propriedades são mapeadas de P.*
+                        
                         return new Pessoa
                         {
                             IdPessoa = (int)reader["IdPessoa"],
@@ -50,7 +46,7 @@ namespace Ecommerce.Repositories
                     }
                 }
 
-                return null; // Retorna null se não encontrar uma Pessoa com o papel de Administrador
+                return null; 
             }
         }
 

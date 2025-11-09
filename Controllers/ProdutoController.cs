@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Ecommerce.Repositories; 
+using Ecommerce.Repositories;
 using Ecommerce.Models;
+using Ecommerce.Filters;
 
 namespace Ecommerce.Controllers;
 
@@ -26,13 +27,15 @@ public class ProdutoController : Controller
     }
 
     [HttpGet]
+    [RequireAdmin]
     public ActionResult Create()
     {        
-        ViewBag.Categorias = categoriaRepository.Read();
+        ViewBag.Categorias = categoriaRepository.ReadAll();
         return View();
     }
 
     [HttpPost]
+    [RequireAdmin]
     public ActionResult Create(Produto model)
     {      
         produtoRepository.Create(model);
@@ -41,6 +44,7 @@ public class ProdutoController : Controller
     }
 
     [HttpGet] 
+    [RequireAdmin]
     public ActionResult Delete(int id)
     {
         produtoRepository.Delete(id);
@@ -49,6 +53,7 @@ public class ProdutoController : Controller
     }
 
     [HttpGet]
+    [RequireAdmin]
     public ActionResult Update(int id)
     {        
         var produto = produtoRepository.Read(id);
@@ -58,13 +63,14 @@ public class ProdutoController : Controller
             return RedirectToAction("Index");
         }
         
-        ViewBag.Categorias = categoriaRepository.Read();
+        ViewBag.Categorias = categoriaRepository.ReadAll();
         
         return View(produto);
     }
 
-    
+
     [HttpPost]
+    [RequireAdmin]
     public ActionResult Update(int id, Produto model)
     {        
         model.IdProduto = id;      

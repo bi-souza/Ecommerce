@@ -1,6 +1,5 @@
 using QRCoder;
-using System.Drawing;
-using System.IO;
+
 
 namespace Ecommerce.Services
 {
@@ -15,14 +14,14 @@ namespace Ecommerce.Services
 
         public string GerarQrCode(decimal valor, string pedidoId)
         {
-            // Se for modo simulado, cria um QR genérico
+            
             if (_config["Pix:Simulate"] == "true")
             {
                 string textoSimulado = $"Pagamento PIX Simulado\nPedido: {pedidoId}\nValor: R$ {valor:F2}";
                 return GerarImagemQr(textoSimulado);
             }
 
-            // Aqui ficaria a geração real do QR code Pix BR Code (se fosse real)
+            
             string chave = _config["Pix:PixKey"];
             string merchant = _config["Pix:MerchantName"];
             string cidade = _config["Pix:MerchantCity"];
