@@ -3,5 +3,9 @@ namespace Ecommerce.Repositories;
 
 public interface ICategoriaRepository
 {
-    List<Categoria> Read();      
+    List<Categoria> ReadAll();
+    void Create(Categoria categoria);
+    Categoria ReadById(int id);
+    void Update(Categoria categoria);
+    void Delete(int id);  
 }

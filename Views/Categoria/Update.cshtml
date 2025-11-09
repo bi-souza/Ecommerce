@@ -1,0 +1,47 @@
+@model Ecommerce.Models.Categoria
+
+@{
+    ViewData["Title"] = "Editar Categoria";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <h1 class="mb-4">@ViewData["Title"]</h1>        
+
+            @* 1. FORMULÁRIO: Usa Tag Helper para roteamento limpo para /Categoria/Update/{id} (POST) *@
+            <form asp-controller="Categoria" asp-action="Update" method="POST">
+                
+                @* 2. ID OCULTO: Essencial para o Controller saber qual registro atualizar. *@
+                <input type="hidden" name="IdCategoria" value="@Model.IdCategoria" />
+
+                @* Opcional: Exibe erros gerais (não vinculados a campos específicos) *@
+                <div class="text-danger">@Html.ValidationSummary(true)</div>
+
+                <div class="mb-3">
+                    <label for="NomeCategoria" class="form-label">Nome da Categoria:</label>
+                    
+                    @* Campo de Entrada: Preenchido com o valor atual para edição *@
+                    <input name="NomeCategoria" class="form-control" value="@Model.NomeCategoria" />
+
+                    @* Exibição de mensagem de erro de validação do servidor *@
+                    <span class="text-danger">@Html.ValidationMessageFor(model => model.NomeCategoria)</span>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i> Salvar Alterações
+                    </button>
+                    
+                    <a asp-controller="Categoria" asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar à Lista
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

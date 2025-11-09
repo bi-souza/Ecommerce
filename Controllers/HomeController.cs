@@ -16,7 +16,7 @@ public class HomeController : Controller
     
     public ActionResult Index()
     {
-        ViewBag.TodasCategorias = categoriaRepository.Read();        
+        ViewBag.TodasCategorias = categoriaRepository.ReadAll();        
         
         var listaDeProdutos = produtoRepository.ReadAllDestaques();       
         

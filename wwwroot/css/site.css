@@ -119,12 +119,12 @@ header {
         text-transform: uppercase;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
-        padding-left: 0.5rem;  
-        padding-right: 0.5rem; 
+        padding-left: 0.75rem;  
+        padding-right: 0.75rem; 
 
         
-        margin-left: 0.9rem;   
-        margin-right: 0.9rem;  
+        margin-left: 0;   
+        margin-right: 0;  
         white-space: nowrap;
     }
 
@@ -272,4 +272,25 @@ header {
     color: #fff;
     background-color: var(--cor-verde-escuro);
     text-decoration: none;
+}
+
+/* AJUSTE PARA O MENU DE CATEGORIAS */
+.navbar-categorias .navbar-nav {
+    /* 1. Correção: Remover overrides problemáticos */
+    margin-right: 0 !important;
+    margin-left: 0 !important; 
+    padding-left: 0;
+    
+    /* 2. Flexbox: Força a ocupação total da largura e alinha */
+    display: flex;
+    width: 100%; 
+    
+    /* 3. ALINHAMENTO COM AS EXTREMIDADES: Espaça uniformemente os links, forçando o primeiro e o último a tocarem nas bordas. */
+    justify-content: space-between; 
+}
+/* Se você deseja que os links individuais tenham um espaçamento menor */
+.navbar-categorias .nav-link {
+    padding-right: 8px; /* Reduz o padding à direita */
+    padding-left: 8px;  /* Reduz o padding à esquerda */
+    white-space: nowrap; /* Impede que os nomes das categorias quebrem linha */
 }

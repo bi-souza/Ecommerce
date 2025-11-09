@@ -1,0 +1,101 @@
+@model List<Ecommerce.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Gerenciamento de Categorias";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+
+    <h1 class="text-dark">Gerenciamento de Categorias</h1>
+    <p>Total de categorias: @Model.Count</p>
+
+    
+    <a class="btn btn-outline-success mb-3" asp-controller="Categoria" asp-action="Create">
+        <i class="fas fa-plus me-2"></i> Adicionar Nova Categoria
+    </a>
+
+    <table class="table table-hover table-striped">
+        <thead class="table-success">
+            <tr>
+                <th>ID</th>
+                <th>Nome da Categoria</th>
+                <th style="width: 200px;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var categoria in Model) {
+            <tr>
+                <td>@categoria.IdCategoria</td>
+                <td>@categoria.NomeCategoria</td>
+                <td>
+                    
+                    <a class="btn btn-sm btn-outline-warning" asp-controller="Categoria" asp-action="Update" asp-route-id="@categoria.IdCategoria" title="Editar">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+
+                    
+                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalConfirmacaoExclusao"
+                            data-id="@categoria.IdCategoria"
+                            data-nome="@categoria.NomeCategoria"
+                            title="Apagar">
+                        <i class="fas fa-trash-alt"></i> Apagar
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" aria-labelledby="modalConfirmacaoExclusaoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmacaoExclusaoLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form asp-controller="Categoria" asp-action="Delete" method="POST">
+                    <div class="modal-body">
+                        @* ID OCULTO: Será preenchido via JavaScript *@
+                        <input type="hidden" name="id" id="categoriaIdExclusao" value="" />
+                        
+                        <p>Você tem certeza que deseja excluir a categoria: <strong><span id="categoriaNomeExclusao"></span></strong>?</p>
+                        @*<p class="mb-0"><strong>Nome: <span id="categoriaNomeExclusao"></span></strong></p>*@
+                        @*<p class="text-danger mt-3">Esta ação é irreversível.</p>*@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Sim, Excluir!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Quando o modal está prestes a ser mostrado
+        var modalExclusao = document.getElementById('modalConfirmacaoExclusao');
+        modalExclusao.addEventListener('show.bs.modal', function (event) {
+            
+            // Botão que disparou o modal
+            var button = event.relatedTarget;
+            
+            // Extrai as informações dos atributos data-* do botão
+            var categoriaId = button.getAttribute('data-id');
+            var categoriaNome = button.getAttribute('data-nome');
+
+            // Atualiza os campos dentro do modal
+            var modalInputId = modalExclusao.querySelector('#categoriaIdExclusao');
+            var modalSpanNome = modalExclusao.querySelector('#categoriaNomeExclusao');
+
+            // Injeta os valores
+            modalInputId.value = categoriaId;
+            modalSpanNome.textContent = categoriaNome;
+        });
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

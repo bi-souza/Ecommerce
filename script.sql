@@ -129,3 +129,23 @@ VALUES ('Vinho Tinto', 'Vinho tinto seco orgânico nacional. Garrafa 750ml.', 72
 
 INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId) 
 VALUES ('Quinoa Real em Grãos', 'Grãos de Quinoa Real orgânica. Pacote 250g.', 19.90, 40, '/images/produtos/quinoa-graos.jpg', 1, 6);
+
+
+--INSERIR UM ADMIN
+DECLARE @NovoAdminId INT;
+
+-- 1. INSERIR NA TABELA BASE: PESSOA
+INSERT INTO Pessoa 
+(Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
+VALUES
+('Admin', '99988877788', 'admin@admin.com', '11999998888', '1985-05-15', 'admin456');
+
+-- CAPTURAR O ID GERADO PARA A PESSOA
+SET @NovoAdminId = SCOPE_IDENTITY();
+
+-- 2. INSERIR NA TABELA DE ESPECIALIZAÇÃO: ADMINISTRADOR
+INSERT INTO Administrador (IdAdmin)
+VALUES (@NovoAdminId); 
+
+-- VERIFICAÇÃO (OPCIONAL)
+SELECT 'Administrador Inserido com sucesso!' AS Status, @NovoAdminId AS IdPessoa_IdAdmin;

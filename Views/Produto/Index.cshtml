@@ -35,14 +35,72 @@
                             Editar
                         </a>
 
-                        <a class="btn btn-sm btn-outline-danger" href="/produto/delete/@produto.IdProduto">
-                            Apagar
-                        </a>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
+                        @* AJUSTE: Botão APAGAR para abrir o modal *@
+                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalConfirmacaoExclusao"
+                            data-id="@produto.IdProduto"
+                            data-nome="@produto.NomeProduto" 
+                            title="Apagar">
+                        <i class="fas fa-trash-alt"></i> Apagar
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    
+    @* INÍCIO DA ESTRUTURA DO MODAL (Copie da View de Categoria, ajustando IDs internos) *@
+    <div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" aria-labelledby="modalConfirmacaoExclusaoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmacaoExclusaoLabel">Confirmação de Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                @* AJUSTE CRÍTICO: O formulário deve apontar para o Controller de PRODUTO *@
+                <form asp-controller="Produto" asp-action="Delete" method="POST">
+                    <div class="modal-body">
+                        @* ID OCULTO: ID genérico para Produto *@
+                        <input type="hidden" name="id" id="produtoIdExclusao" value="" />
+                        
+                        <p>Você tem certeza que deseja excluir o produto: <strong><span id="produtoNomeExclusao"></span></strong>?</p>
+                        @*<p class="text-danger mt-3">Esta ação é irreversível.</p>*@
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Sim, Excluir!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @* FIM DA ESTRUTURA DO MODAL *@
 
-    @*</body>*@
+
+    @section Scripts {
+        <script>
+            // O JavaScript foi ajustado para usar os novos IDs: #produtoIdExclusao e #produtoNomeExclusao
+            var modalExclusao = document.getElementById('modalConfirmacaoExclusao');
+            modalExclusao.addEventListener('show.bs.modal', function (event) {
+                
+                var button = event.relatedTarget;
+                
+                // Extrai as informações dos atributos data-* do botão (data-id e data-nome)
+                var itemId = button.getAttribute('data-id');
+                var itemNome = button.getAttribute('data-nome');
+
+                // Atualiza os campos dentro do modal usando os IDs ESPECÍFICOS da View de Produto
+                var modalInputId = modalExclusao.querySelector('#produtoIdExclusao');
+                var modalSpanNome = modalExclusao.querySelector('#produtoNomeExclusao');
+
+                // Injeta os valores
+                modalInputId.value = itemId;
+                modalSpanNome.textContent = itemNome;
+            });
+        </script>
+        
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
 </html>

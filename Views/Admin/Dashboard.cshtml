@@ -1,0 +1,42 @@
+@{
+    
+    ViewData["Title"] = "Painel Administrativo";
+}
+<div class="container mt-3">
+
+    <h1 class="text-dark">Ferramentas de Gerenciamento</h1>
+
+    <div class="row mt-4">
+        
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title"><i class="fas fa-box me-2"></i> Gerenciar Produtos</h5>
+                    <p class="card-text">Crie, edite e exclua produtos da loja.</p>
+                    <a asp-controller="Produto" asp-action="Index" class="btn btn-lg btn-success mt-3">
+                        Acessar Produtos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title"><i class="fas fa-tags me-2"></i> Gerenciar Categorias</h5>
+                    <p class="card-text">Crie, edite e exclua as categorias dos produtos.</p>
+                    <a asp-controller="Categoria" asp-action="Index" class="btn btn-lg btn-secondary mt-3">
+                        Acessar Categorias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+    <style>
+        .card-title i {
+            color: var(--cor-verde-floresta); 
+        }
+    </style>
