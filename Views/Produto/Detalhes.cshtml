@@ -5,6 +5,7 @@
 
     var avaliacoes = ViewBag.Avaliacoes as List<Ecommerce.Models.Avaliacao>;
     var clienteIdLogado = Context.Session.GetInt32("ClienteId");
+    bool podeAvaliar = (bool)(ViewBag.PodeAvaliar ?? false);
 }
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -101,10 +102,13 @@
         </div>
 
         <div class="col-md-5">
-            @if (clienteIdLogado != null)
-            {
-                var clienteJaAvaliou = avaliacoes.Any(a => a.ClienteId == clienteIdLogado);
+           @if (clienteIdLogado != null)
+        {
+            var clienteJaAvaliou = avaliacoes.Any(a => a.ClienteId == clienteIdLogado);
 
+            
+            if (podeAvaliar) 
+            {
                 if (!clienteJaAvaliou)
                 {
                     <h3>Deixe sua avaliação</h3>
@@ -126,15 +130,24 @@
                 }
                 else
                 {
+                    // Cliente comprou e já avaliou
                     <div class="alert alert-info">Você já avaliou este produto.</div>
                 }
-            }
-            else
+            } 
+            else 
             {
-                <div class="alert alert-secondary">
-                    <a href="/Cliente/Login">Faça login</a> para deixar uma avaliação.
+                // Cliente logado, mas NÃO comprou 
+                <div class="alert alert-warning">
+                    Você só pode avaliar este produto após a sua compra ser concluída.
                 </div>
             }
-        </div>
+        }
+        else
+        {
+            // Cliente não logado
+            <div class="alert alert-secondary">
+                <a href="/Auth/Login">Faça login</a> para deixar uma avaliação.
+            </div>
+        }
     </div>
 </div>

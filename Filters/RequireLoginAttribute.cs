@@ -14,7 +14,7 @@ namespace Ecommerce
 
             if (clienteId is null)
             {
-                context.Result = new RedirectToActionResult("Login", "Cliente", new { });
+                context.Result = new RedirectResult("/Auth/Login");
                 return;
             }
 

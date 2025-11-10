@@ -10,12 +10,15 @@ public class ProdutoController : Controller
     private IProdutoRepository produtoRepository;
     private ICategoriaRepository categoriaRepository;
     private IAvaliacaoRepository avaliacaoRepository;
+    private IPedidoRepository pedidoRepository;
 
-    public ProdutoController(IProdutoRepository produtoRepository, ICategoriaRepository categoriaRepository, IAvaliacaoRepository avaliacaoRepository)
+    public ProdutoController(IProdutoRepository produtoRepository, ICategoriaRepository categoriaRepository, IAvaliacaoRepository avaliacaoRepository, IPedidoRepository pedidoRepository)
     {
         this.produtoRepository = produtoRepository;
         this.categoriaRepository = categoriaRepository;
         this.avaliacaoRepository = avaliacaoRepository;
+        this.pedidoRepository = pedidoRepository;
+
     }
 
     
@@ -43,7 +46,7 @@ public class ProdutoController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [HttpGet] 
+    [HttpPost] 
     [RequireAdmin]
     public ActionResult Delete(int id)
     {
@@ -93,6 +96,17 @@ public class ProdutoController : Controller
         var listaDeAvaliacoes = avaliacaoRepository.ReadByProduto(id);
 
         ViewBag.Avaliacoes = listaDeAvaliacoes;
+        
+        var clienteId = HttpContext.Session.GetInt32("ClienteId");
+
+        bool podeAvaliar = false;
+
+        if (clienteId.HasValue)
+        {            
+            podeAvaliar = pedidoRepository.ClienteComprouProduto(clienteId.Value, id);
+        }
+        
+        ViewBag.PodeAvaliar = podeAvaliar;
 
         return View(produto);
     }

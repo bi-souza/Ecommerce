@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
 namespace Ecommerce.Filters
 {
@@ -16,13 +14,8 @@ namespace Ecommerce.Filters
             if (string.IsNullOrEmpty(papel) || papel != "Admin")
             {              
                 
-                context.Result = new RedirectToRouteResult(
-                    new RouteValueDictionary
-                    {
-                        {"controller", "Auth"}, 
-                        {"action", "Login"}
-                    }
-                );
+                context.Result = new RedirectResult("/Auth/Login");                    
+                
             }
             
             base.OnActionExecuting(context);

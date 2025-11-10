@@ -1,0 +1,48 @@
+@model Ecommerce.Models.Categoria
+
+@{
+    ViewData["Title"] = "Excluir Categoria";
+    Layout = "_Layout";
+}
+
+<div class="container mt-4">
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            
+            <h1 class="mb-4 text-danger">Excluir Categoria</h1>
+            
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i> 
+                Você tem certeza que deseja **EXCLUIR** a categoria permanentemente? Esta ação é irreversível.
+            </div>
+
+           
+            <dl class="row mb-4">
+                <dt class="col-sm-4">ID:</dt>
+                <dd class="col-sm-8">@Model.IdCategoria</dd>
+
+                <dt class="col-sm-4">Nome da Categoria:</dt>
+                <dd class="col-sm-8"><strong>@Model.NomeCategoria</strong></dd>
+            </dl>
+
+            
+            <form asp-controller="Categoria" asp-action="Delete" method="POST">
+                
+                
+                <input type="hidden" name="id" value="@Model.IdCategoria" />
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-trash-alt me-2"></i> Confirmar Exclusão
+                    </button>
+                    
+                    <a asp-controller="Categoria" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i> Cancelar e Voltar
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

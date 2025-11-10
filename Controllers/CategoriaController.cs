@@ -58,21 +58,9 @@ namespace Ecommerce.Controllers
             return RedirectToAction("Index");
         }
 
-        
-        [HttpGet] 
-        public ActionResult Delete(int id)
-        {
-            var categoria = _repository.ReadById(id);
-            if (categoria == null)
-            {
-                return NotFound(); 
-            }
-            return View(categoria);
-        }
-
-        
-        [HttpPost, ActionName("Delete")]         
-        public ActionResult DeleteConfirmed(int id)       
+         
+        [HttpPost]         
+        public ActionResult Delete(int id)       
         {
             
             _repository.Delete(id);

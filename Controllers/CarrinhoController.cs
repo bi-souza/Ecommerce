@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Linq;
-using System.Collections.Generic;
-using Ecommerce;                 
+using System.Text.Json;                
 using Ecommerce.Models;
 using Ecommerce.Repositories;    
 
