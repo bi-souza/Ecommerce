@@ -149,3 +149,23 @@ VALUES (@NovoAdminId);
 
 -- VERIFICAÇÃO (OPCIONAL)
 SELECT 'Administrador Inserido com sucesso!' AS Status, @NovoAdminId AS IdPessoa_IdAdmin;
+
+
+--INSERIR UM CLIENTE
+DECLARE @NovoClienteId INT;
+
+-- 1. INSERIR NA TABELA BASE: PESSOA
+INSERT INTO Pessoa 
+(Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
+VALUES
+('Lúcia Helena', '11122233355', 'lucia@cliente.com', '11987654321', '1950-10-25', 'senha123');
+
+-- CAPTURAR O ID GERADO PARA A PESSOA
+SET @NovoClienteId = SCOPE_IDENTITY();
+
+-- 2. INSERIR NA TABELA DE ESPECIALIZAÇÃO: CLIENTE
+INSERT INTO Cliente (IdCliente)
+VALUES (@NovoClienteId);
+
+-- VERIFICAÇÃO (OPCIONAL)
+SELECT 'Cliente Inserido com sucesso!' AS Status, @NovoClienteId AS IdPessoa_IdCliente;

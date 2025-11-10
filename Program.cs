@@ -24,6 +24,10 @@ builder.Services.AddTransient<IAdministradorRepository>(_ =>
     new AdministradorDatabaseRepository(
         builder.Configuration.GetConnectionString("default")));
 
+builder.Services.AddTransient<IPedidoRepository>(_ =>
+    new PedidoDatabaseRepository(
+        builder.Configuration.GetConnectionString("default")));
+
 builder.Services.AddSingleton<PixService>();
 
 builder.Services.AddDistributedMemoryCache();

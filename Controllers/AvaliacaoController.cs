@@ -7,9 +7,11 @@ namespace Ecommerce.Controllers;
 public class AvaliacaoController : Controller
 {
     private IAvaliacaoRepository repository;
-    public AvaliacaoController(IAvaliacaoRepository repository)
+    private IPedidoRepository pedidoRepository;
+    public AvaliacaoController(IAvaliacaoRepository repository, IPedidoRepository pedidoRepository)
     {
         this.repository = repository;
+        this.pedidoRepository = pedidoRepository;
     }
 
     [HttpPost]
