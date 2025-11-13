@@ -4,50 +4,45 @@ using System.Data;
 
 namespace Ecommerce.Repositories
 {
-    public class ClienteDatabaseRepository : IClienteRepository
-    {
-        private readonly string _connectionString;
+    public class ClienteDatabaseRepository : DbConnection, IClienteRepository
+    {       
 
-        public ClienteDatabaseRepository(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
+        public ClienteDatabaseRepository(string? strConn) : base(strConn) { }       
 
         public Cliente Login(LoginViewModel model)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = @"SELECT P.*, C.IdCliente
+                               FROM Pessoas P
+                               INNER JOIN Clientes C ON P.IdPessoa = C.IdCliente
+                               WHERE P.Email = @Email AND P.SenhaHash = @SenhaHash";                
+                
+            cmd.Parameters.AddWithValue("@Email", model.Email ?? string.Empty);
+            cmd.Parameters.AddWithValue("@SenhaHash", model.Senha ?? string.Empty);
+
+                
+            SqlDataReader reader = cmd.ExecuteReader();
+                
+            if (reader.Read())
             {
-                string sql = @"SELECT P.*, C.IdCliente
-                               FROM Pessoa P
-                               INNER JOIN Cliente C ON P.IdPessoa = C.IdCliente
-                               WHERE P.Email = @Email AND P.SenhaHash = @SenhaHash";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Email", model.Email ?? string.Empty);
-                cmd.Parameters.AddWithValue("@SenhaHash", model.Senha ?? string.Empty);
-
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                return new Cliente
                 {
-                    if (reader.Read())
-                    {
-                        return new Cliente
-                        {
-                            IdCliente = (int)reader["IdCliente"],
-                            Nome = reader["Nome"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            Cpf = reader["Cpf"].ToString(),
-                            Telefone = reader["Telefone"].ToString(),
-                            DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"])
-                        };
-                    }
-                }
+                    IdCliente = (int)reader["IdCliente"],
+                    Nome = reader["Nome"].ToString(),
+                    Email = reader["Email"].ToString(),
+                    Cpf = reader["Cpf"].ToString(),
+                    Telefone = reader["Telefone"].ToString(),
+                    DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"])
+                };
+            }                
 
-                return null;
-            }
+            return null;
+            
         }
 
 
-        public void Cadastrar(Cliente cliente)
+        /*public void Cadastrar(Cliente cliente)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -59,7 +54,7 @@ namespace Ecommerce.Repositories
                 {
                     
                     string sqlPessoa = @"
-                        INSERT INTO Pessoa (Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
+                        INSERT INTO Pessoas (Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
                         VALUES (@Nome, @Cpf, @Email, @Telefone, @DataNasc, @SenhaHash);
                         SELECT CAST(scope_identity() AS INT);"; 
                         
@@ -79,7 +74,7 @@ namespace Ecommerce.Repositories
                         int idCliente = Convert.ToInt32(result);
 
                         
-                        string sqlCliente = "INSERT INTO Cliente (IdCliente) VALUES (@IdCliente)";
+                        string sqlCliente = "INSERT INTO Clientes (IdCliente) VALUES (@IdCliente)";
 
                         using (SqlCommand cmdCliente = new SqlCommand(sqlCliente, conn, tx))
                         {
@@ -116,8 +111,8 @@ namespace Ecommerce.Repositories
                 
                 string sql = @"
                     SELECT P.*, C.IdCliente 
-                    FROM Pessoa P
-                    INNER JOIN Cliente C ON P.IdPessoa = C.IdCliente
+                    FROM Pessoas P
+                    INNER JOIN Clientes C ON P.IdPessoa = C.IdCliente
                     WHERE P.Email = @Email";
                     
                 SqlCommand cmd = new SqlCommand(sql, conn);
@@ -140,46 +135,42 @@ namespace Ecommerce.Repositories
 
                 return null;
             }
-        }
+        }*/
         public Cliente BuscarPorId(int id)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                
-                string sql = @"
-                    SELECT P.*, C.IdCliente 
-                    FROM Pessoa P
-                    INNER JOIN Cliente C ON P.IdPessoa = C.IdCliente
-                    WHERE C.IdCliente = @Id";
+            SqlCommand cmd = new SqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = @" SELECT P.*, C.IdCliente 
+                FROM Pessoas P
+                INNER JOIN Clientes C ON P.IdPessoa = C.IdCliente
+                WHERE C.IdCliente = @Id";    
+                                
+            cmd.Parameters.AddWithValue("@Id", id);
 
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+            SqlDataReader reader = cmd.ExecuteReader();
+                
+            if (reader.Read())
+            {
+                return new Cliente
                 {
-                    if (reader.Read())
-                    {
-                        return new Cliente
-                        {
-                            IdCliente = (int)reader["IdCliente"],                            
-                            Nome = reader["Nome"].ToString(), 
-                            Email = reader["Email"].ToString(),
-                            Cpf = reader["Cpf"].ToString(),
-                            Telefone = reader["Telefone"].ToString(),
-                            DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
-                            SenhaHash = reader["SenhaHash"].ToString()
-                        };
-                    }
-                }
-                return null;
-            }
+                    IdCliente = (int)reader["IdCliente"],                            
+                    Nome = reader["Nome"].ToString(), 
+                    Email = reader["Email"].ToString(),
+                    Cpf = reader["Cpf"].ToString(),
+                    Telefone = reader["Telefone"].ToString(),
+                    DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
+                    SenhaHash = reader["SenhaHash"].ToString()
+                };
+            }               
+            return null;
+            
         }
-        public void Atualizar(Cliente cliente)
+        /*public void Atualizar(Cliente cliente)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 
-                string sql = @"UPDATE Pessoa
+                string sql = @"UPDATE Pessoas
                                SET Nome = @Nome,
                                    Email = @Email,
                                    Telefone = @Telefone
@@ -201,7 +192,7 @@ namespace Ecommerce.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 
-                string sql = "SELECT SenhaHash FROM Pessoa WHERE IdPessoa = @Id";
+                string sql = "SELECT SenhaHash FROM Pessoas WHERE IdPessoa = @Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
                 conn.Open();
@@ -217,7 +208,7 @@ namespace Ecommerce.Repositories
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 
-                string sql = "UPDATE Pessoa SET SenhaHash = @SenhaHash WHERE IdPessoa = @Id";
+                string sql = "UPDATE Pessoas SET SenhaHash = @SenhaHash WHERE IdPessoa = @Id";
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@SenhaHash", novaSenha ?? string.Empty);
                 cmd.Parameters.AddWithValue("@Id", id);
@@ -235,7 +226,7 @@ namespace Ecommerce.Repositories
                 try
                 {
                     
-                    string sqlCliente = "DELETE FROM Cliente WHERE IdCliente = @Id";
+                    string sqlCliente = "DELETE FROM Clientes WHERE IdCliente = @Id";
                     using (SqlCommand cmdCliente = new SqlCommand(sqlCliente, conn, tx))
                     {
                         cmdCliente.Parameters.AddWithValue("@Id", id);
@@ -243,7 +234,7 @@ namespace Ecommerce.Repositories
                     }
                     
                     
-                    string sqlPessoa = "DELETE FROM Pessoa WHERE IdPessoa = @Id";
+                    string sqlPessoa = "DELETE FROM Pessoas WHERE IdPessoa = @Id";
                     using (SqlCommand cmdPessoa = new SqlCommand(sqlPessoa, conn, tx))
                     {
                         cmdPessoa.Parameters.AddWithValue("@Id", id);
@@ -254,10 +245,10 @@ namespace Ecommerce.Repositories
                 }
                 catch (Exception)
                 {
-                    try { tx.Rollback(); } catch { /* ignore */ }
+                    try { tx.Rollback(); } catch { /* ignore */ /*}
                     throw;
                 }
             }
-        }
+        }*/
     }
 }

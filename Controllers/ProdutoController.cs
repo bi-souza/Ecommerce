@@ -18,7 +18,6 @@ public class ProdutoController : Controller
         this.categoriaRepository = categoriaRepository;
         this.avaliacaoRepository = avaliacaoRepository;
         this.pedidoRepository = pedidoRepository;
-
     }
 
     

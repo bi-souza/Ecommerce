@@ -2,54 +2,47 @@ using Ecommerce.Models;
 using Microsoft.Data.SqlClient;
 using System;
 
-namespace Ecommerce.Repositories
+namespace Ecommerce.Repositories;
+
+public class AdministradorDatabaseRepository : DbConnection, IAdministradorRepository
 {
-    public class AdministradorDatabaseRepository : IAdministradorRepository
-    {
-        private readonly string _connectionString;
+    public AdministradorDatabaseRepository(string? strConn) : base(strConn) { }        
 
-        public AdministradorDatabaseRepository(string connectionString)
+    public Pessoa Login(LoginViewModel model)
+    {   
+        SqlCommand cmd = new SqlCommand(); 
+        cmd.Connection = conn; 
+        cmd.CommandText = @"
+            SELECT P.*, A.IdAdmin 
+            FROM Pessoas P 
+            INNER JOIN Administradores A ON P.IdPessoa = A.IdAdmin 
+            WHERE P.Email = @Email AND P.SenhaHash = @SenhaHash";                        
+        
+                    
+        cmd.Parameters.AddWithValue("@Email", model.Email ?? string.Empty);
+        cmd.Parameters.AddWithValue("@SenhaHash", model.Senha ?? string.Empty);
+
+            
+        SqlDataReader reader = cmd.ExecuteReader();
+            
+        if (reader.Read())
         {
-            _connectionString = connectionString;
-        }
+            
+            return new Pessoa
+            {
+                IdPessoa = (int)reader["IdPessoa"],
+                Nome = reader["Nome"].ToString(),
+                Email = reader["Email"].ToString(),
+                Cpf = reader["Cpf"].ToString(),
+                Telefone = reader["Telefone"].ToString(),
+                DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
+                SenhaHash = reader["SenhaHash"].ToString()
+            };
+        }                
 
-        public Pessoa Login(LoginViewModel model)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {                
-                string sql = @"
-                    SELECT P.*, A.IdAdmin 
-                    FROM Pessoa P 
-                    INNER JOIN Administrador A ON P.IdPessoa = A.IdAdmin 
-                    WHERE P.Email = @Email AND P.SenhaHash = @SenhaHash";
-                
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@Email", model.Email ?? string.Empty);
-                cmd.Parameters.AddWithValue("@SenhaHash", model.Senha ?? string.Empty);
-
-                conn.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        
-                        return new Pessoa
-                        {
-                            IdPessoa = (int)reader["IdPessoa"],
-                            Nome = reader["Nome"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            Cpf = reader["Cpf"].ToString(),
-                            Telefone = reader["Telefone"].ToString(),
-                            DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
-                            SenhaHash = reader["SenhaHash"].ToString()
-                        };
-                    }
-                }
-
-                return null; 
-            }
-        }
-
-       
+        return null; 
+        
     }
+
+    
 }

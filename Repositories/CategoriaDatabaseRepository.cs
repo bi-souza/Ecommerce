@@ -11,7 +11,7 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = "INSERT INTO Categoria (NomeCategoria) VALUES (@NomeCategoria)";
+        cmd.CommandText = "INSERT INTO Categorias (NomeCategoria) VALUES (@NomeCategoria)";
 
         cmd.Parameters.AddWithValue("@NomeCategoria", categoria.NomeCategoria ?? string.Empty);
 
@@ -21,19 +21,19 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
     public List<Categoria> ReadAll()
     {
         List<Categoria> lista = new List<Categoria>();
-        SqlCommand cmd = new SqlCommand("SELECT * FROM Categoria", conn);
+        SqlCommand cmd = new SqlCommand("SELECT * FROM Categorias", conn);
+
+        SqlDataReader reader = cmd.ExecuteReader();
         
-        using (SqlDataReader reader = cmd.ExecuteReader())
+        while (reader.Read())
         {
-            while (reader.Read())
+            lista.Add(new Categoria
             {
-                lista.Add(new Categoria
-                {
-                    IdCategoria = (int)reader["IdCategoria"],
-                    NomeCategoria = (string)reader["NomeCategoria"]
-                });
-            }
+                IdCategoria = (int)reader["IdCategoria"],
+                NomeCategoria = (string)reader["NomeCategoria"]
+            });
         }
+        
         return lista;
     }
     
@@ -43,21 +43,21 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = "SELECT * FROM Categoria WHERE IdCategoria = @IdCategoria";
+        cmd.CommandText = "SELECT * FROM Categorias WHERE IdCategoria = @IdCategoria";
         
         cmd.Parameters.AddWithValue("@IdCategoria", id);
+
+        SqlDataReader reader = cmd.ExecuteReader();
         
-        using (SqlDataReader reader = cmd.ExecuteReader())
+        if (reader.Read())
         {
-            if (reader.Read())
+            return new Categoria
             {
-                return new Categoria
-                {
-                    IdCategoria = (int)reader["IdCategoria"],
-                    NomeCategoria = (string)reader["NomeCategoria"]
-                };
-            }
+                IdCategoria = (int)reader["IdCategoria"],
+                NomeCategoria = (string)reader["NomeCategoria"]
+            };
         }
+        
         return null;
     }
     
@@ -67,7 +67,7 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = "UPDATE Categoria SET NomeCategoria = @NomeCategoria WHERE IdCategoria = @IdCategoria";
+        cmd.CommandText = "UPDATE Categorias SET NomeCategoria = @NomeCategoria WHERE IdCategoria = @IdCategoria";
         
         cmd.Parameters.AddWithValue("@NomeCategoria", categoria.NomeCategoria ?? string.Empty);
         cmd.Parameters.AddWithValue("@IdCategoria", categoria.IdCategoria);
@@ -81,7 +81,7 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = "DELETE FROM Categoria WHERE IdCategoria = @IdCategoria";
+        cmd.CommandText = "DELETE FROM Categorias WHERE IdCategoria = @IdCategoria";
         
         cmd.Parameters.AddWithValue("@IdCategoria", id);
 
