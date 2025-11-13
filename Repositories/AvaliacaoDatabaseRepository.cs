@@ -10,7 +10,7 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "INSERT INTO Avaliacao (Nota, Comentario, ClienteId, ProdutoId) VALUES (@nota, @comentario, @clienteId, @produtoId)";
+        cmd.CommandText = "INSERT INTO Avaliacoes (Nota, Comentario, ClienteId, ProdutoId) VALUES (@nota, @comentario, @clienteId, @produtoId)";
 
         cmd.Parameters.AddWithValue("@nota", model.Nota);
         
@@ -37,9 +37,9 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
         cmd.Connection = conn;        
         
         cmd.CommandText = @"SELECT A.*, P.Nome as NomeCliente 
-                            FROM Avaliacao A 
-                            JOIN Cliente C ON A.ClienteId = C.IdCliente
-                            JOIN Pessoa P ON C.IdCliente = P.IdPessoa  -- Novo JOIN
+                            FROM Avaliacoes A 
+                            JOIN Clientes C ON A.ClienteId = C.IdCliente
+                            JOIN Pessoas P ON C.IdCliente = P.IdPessoa  
                             WHERE A.ProdutoId = @produtoId
                             ORDER BY A.DataAvaliacao DESC";
 
@@ -76,7 +76,7 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "DELETE FROM Avaliacao WHERE ClienteId = @clienteId AND ProdutoId = @produtoId";
+        cmd.CommandText = "DELETE FROM Avaliacoes WHERE ClienteId = @clienteId AND ProdutoId = @produtoId";
         cmd.Parameters.AddWithValue("@clienteId", clienteId);
         cmd.Parameters.AddWithValue("@produtoId", produtoId);
         cmd.ExecuteNonQuery();
@@ -88,9 +88,9 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
         cmd.Connection = conn;
         
         cmd.CommandText = @"SELECT A.*, P.Nome as NomeCliente 
-                            FROM Avaliacao A 
-                            JOIN Cliente C ON A.ClienteId = C.IdCliente
-                            JOIN Pessoa P ON C.IdCliente = P.IdPessoa  -- Novo JOIN
+                            FROM Avaliacoes A 
+                            JOIN Clientes C ON A.ClienteId = C.IdCliente
+                            JOIN Pessoas P ON C.IdCliente = P.IdPessoa 
                             WHERE A.ProdutoId = @produtoId";
 
         cmd.Parameters.AddWithValue("@clienteId", clienteId);
@@ -133,7 +133,7 @@ public class AvaliacaoDatabaseRepository : DbConnection, IAvaliacaoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;        
         
-        cmd.CommandText = @"UPDATE Avaliacao 
+        cmd.CommandText = @"UPDATE Avaliacoes 
                             SET Nota = @nota, Comentario = @comentario, DataAvaliacao = getdate() 
                             WHERE ClienteId = @clienteId AND ProdutoId = @produtoId";
 

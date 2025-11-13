@@ -18,7 +18,7 @@ namespace Ecommerce.Controllers
             return View();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult Cadastro(Cliente cliente)
         {
             if (repository.BuscarPorEmail(cliente.Email) != null)
@@ -113,6 +113,6 @@ namespace Ecommerce.Controllers
                 HttpContext.Session.Clear();
             }
             return RedirectToAction("Index", "Home");
-        }
+        }*/
     }
 }

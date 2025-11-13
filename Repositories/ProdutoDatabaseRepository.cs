@@ -13,8 +13,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-
-        cmd.CommandText = @"INSERT INTO Produto (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId)                             
+        cmd.CommandText = @"INSERT INTO Produtos (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaque, CategoriaId)                             
                             VALUES (@nome, @desc, @preco, @estoque, @img, @destaque, @catId)";
 
 
@@ -35,7 +34,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = "DELETE FROM Produto WHERE IdProduto = @id";
+        cmd.CommandText = "DELETE FROM Produtos WHERE IdProduto = @id";
         
         cmd.Parameters.AddWithValue("@id", id);
         
@@ -47,7 +46,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = @"UPDATE Produto 
+        cmd.CommandText = @"UPDATE Produtos 
                             SET NomeProduto = @nome, 
                                 Descricao = @desc, 
                                 Preco = @preco, 
@@ -75,7 +74,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
 
-        cmd.CommandText = "SELECT * FROM Produto WHERE CategoriaId = @categoriaId";
+        cmd.CommandText = "SELECT * FROM Produtos WHERE CategoriaId = @categoriaId";
         cmd.Parameters.AddWithValue("@categoriaId", categoriaId);
 
         SqlDataReader reader = cmd.ExecuteReader();
@@ -104,7 +103,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
 
-        cmd.CommandText = "SELECT * FROM Produto WHERE Destaque = 1";
+        cmd.CommandText = "SELECT * FROM Produtos WHERE Destaque = 1";
 
         SqlDataReader reader = cmd.ExecuteReader();
         while (reader.Read())
@@ -129,7 +128,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         List<Produto> lista = new List<Produto>();
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "SELECT * FROM Produto"; 
+        cmd.CommandText = "SELECT * FROM Produtos"; 
 
         SqlDataReader reader = cmd.ExecuteReader();
 
@@ -153,7 +152,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
-        cmd.CommandText = "SELECT * FROM Produto WHERE IdProduto = @id";
+        cmd.CommandText = "SELECT * FROM Produtos WHERE IdProduto = @id";
         cmd.Parameters.AddWithValue("@id", id);
 
         SqlDataReader reader = cmd.ExecuteReader();
@@ -184,7 +183,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
         
-        cmd.CommandText = "SELECT * FROM Produto WHERE NomeProduto LIKE @termo";
+        cmd.CommandText = "SELECT * FROM Produtos WHERE NomeProduto LIKE @termo";
         cmd.Parameters.AddWithValue("@termo", $"%{termo}%");
 
         SqlDataReader reader = cmd.ExecuteReader();
