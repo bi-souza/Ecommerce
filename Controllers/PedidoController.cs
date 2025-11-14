@@ -4,7 +4,7 @@ using System.Text.Json;
 using Ecommerce.Models;
 using Ecommerce.Services; 
 using Ecommerce.Repositories; 
-
+using Microsoft.AspNetCore.Http;
 
 namespace Ecommerce.Controllers
 {
@@ -146,6 +146,67 @@ namespace Ecommerce.Controllers
                 : (JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>());
         }
         
-        
+        [RequireLogin]
+        public IActionResult Historico()
+        {
+            var clienteId = HttpContext.Session.GetInt32("ClienteId");
+            if (clienteId is null)
+            {
+                TempData["Msg"] = "Faça login para ver seus pedidos.";
+                return RedirectToAction("Login", "Cliente");
+            }
+
+            var cfg = HttpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration
+                    ?? throw new InvalidOperationException("IConfiguration não disponível.");
+
+            var cs = cfg.GetConnectionString("default")
+                    ?? throw new InvalidOperationException("ConnectionString 'default' não encontrada.");
+
+            var lista = new List<HistoricoPedido>();
+
+            using (var con = new SqlConnection(cs))
+            {
+                con.Open();
+
+                var sql = @"
+                    SELECT 
+                        p.IdPedido,
+                        p.DataPedido,
+                        p.ValorTotal,
+                        p.StatusPedido,
+                        COUNT(i.PedidoId) AS QuantidadeItens
+                    FROM Pedidos p
+                    LEFT JOIN ItensPedido i ON i.PedidoId = p.IdPedido
+                    WHERE p.ClienteId = @cliente
+                    GROUP BY 
+                        p.IdPedido, p.DataPedido, p.ValorTotal, p.StatusPedido
+                    ORDER BY p.DataPedido DESC;";
+
+                using (var cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@cliente", clienteId.Value);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var vm = new HistoricoPedido
+                            {
+                                IdPedido        = reader.GetInt32(0),
+                                DataPedido      = reader.GetDateTime(1),
+                                ValorTotal      = reader.GetDecimal(2),
+                                StatusPedido    = reader.GetString(3),
+                                QuantidadeItens = reader.GetInt32(4)
+                            };
+
+                            lista.Add(vm);
+                        }
+                    }
+                }
+            }
+
+            return View(lista);
+        }
+
     }
 }

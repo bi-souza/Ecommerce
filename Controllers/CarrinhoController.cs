@@ -36,7 +36,7 @@ namespace Ecommerce.Controllers
 
         [HttpPost]
         [RequireLogin] 
-        public ActionResult Create(CartItem form)
+        public ActionResult Create(CartItem form, string? returnUrl)
         {
             var p = repository.Read(form.IdProduto); 
             if (p == null) return RedirectToAction("Index", "Home");
@@ -66,7 +66,12 @@ namespace Ecommerce.Controllers
             }
 
             HttpContext.Session.SetString("CART", JsonSerializer.Serialize(cart));
-            return RedirectToAction("Index");
+            TempData["Msg"] = "Produto adicionado ao carrinho!";
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Produto");
         }
 
         [HttpGet]

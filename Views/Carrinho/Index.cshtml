@@ -55,14 +55,10 @@ else
         </tfoot>
     </table>
 
-    @if (Model.Any())
-{
+
     <form asp-controller="Pedido" asp-action="Create" method="get">
         <button class="btn btn-success btn-lg">Finalizar pedido</button>
     </form>
 }
 
-    <form asp-action="Limpar" method="post">
-        <button class="btn btn-warning">Limpar carrinho</button>
-    </form>
-}
+
