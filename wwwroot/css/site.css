@@ -294,3 +294,15 @@ header {
     padding-left: 8px;  /* Reduz o padding à esquerda */
     white-space: nowrap; /* Impede que os nomes das categorias quebrem linha */
 }
+.nav-icones {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;   /* nao deixa quebrar a linha la dos icones do carrinho e meus pedidos */
+    gap: 16px;           
+}
+
+.navbar-principal {
+    min-height: 70px;  
+    display: flex;
+    align-items: center;
+}
