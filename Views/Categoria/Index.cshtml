@@ -10,6 +10,11 @@
     <h1 class="text-dark">Gerenciamento de Categorias</h1>
     <p>Total de categorias: @Model.Count</p>
 
+    @{        
+        
+        var mensagemErro = TempData["MensagemErro"] as string;
+    }
+
     
     <a class="btn btn-outline-success mb-3" asp-controller="Categoria" asp-action="Create">
         <i class="fas fa-plus me-2"></i> Adicionar Nova Categoria
@@ -74,6 +79,23 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalFeedback" tabindex="-1" aria-labelledby="modalFeedbackLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">                    
+                    <h5 class="modal-title" id="modalFeedbackLabel"></h5> 
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="feedbackMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @section Scripts {
     <script>
         // Quando o modal está prestes a ser mostrado
@@ -95,6 +117,26 @@
             modalInputId.value = categoriaId;
             modalSpanNome.textContent = categoriaNome;
         });
+
+        const erro = '@Html.Raw(mensagemErro)';
+        
+        const modalFeedback = document.getElementById('modalFeedback');
+        
+        // 2. Verifica se a string de erro existe e não está vazia (após o trim)
+        if (erro && erro.trim() !== '') {
+            const modalBody = modalFeedback.querySelector('#feedbackMessage');
+            
+            // Preenche o conteúdo do modal de erro
+            modalBody.innerHTML = `
+                <p class="text-dark">${erro}</p>
+                <p class="mt-3">A exclusão foi impedida para proteger a integridade dos seus dados. Esta categoria possui produtos vinculados. Remova os vínculos e tente novamente.</p>
+            `;
+            
+            // 3. Cria uma instância do Modal do Bootstrap e o exibe imediatamente
+            // Assume-se que a biblioteca Bootstrap 5 (ou superior) está linkada no _Layout.
+            const feedbackModal = new bootstrap.Modal(modalFeedback);
+            feedbackModal.show();
+        }
     </script>
     
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

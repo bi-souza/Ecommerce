@@ -7,5 +7,5 @@ public interface ICategoriaRepository
     void Create(Categoria categoria);
     Categoria ReadById(int id);
     void Update(Categoria categoria);
-    void Delete(int id);  
+    bool Delete(int id);  
 }

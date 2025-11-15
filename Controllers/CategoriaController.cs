@@ -61,10 +61,20 @@ namespace Ecommerce.Controllers
          
         [HttpPost]         
         public ActionResult Delete(int id)       
-        {
-            
-            _repository.Delete(id);
-            return RedirectToAction("Index");
+        {            
+            bool deleted = _repository.Delete(id);
+
+            if (deleted)
+            {
+                return RedirectToAction("Index");
+            }
+
+            else
+            {
+                TempData["MensagemErro"] = "Não foi possível excluir a categoria. Existem produtos vinculados a ela.";
+                return RedirectToAction("Index");
+            } 
+           
         }
     }
 }
