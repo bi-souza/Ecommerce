@@ -49,9 +49,19 @@ public class ProdutoController : Controller
     [RequireAdmin]
     public ActionResult Delete(int id)
     {
-        produtoRepository.Delete(id);
+       bool deleted = produtoRepository.Delete(id);
+
+        if (deleted)
+        {
+            return RedirectToAction("Index");
+        }
+
+        else
+        {
+            TempData["DeleteError"] = $"A exclusão do produto (ID: {id}) não foi permitida. O item possui histórico de pedidos e não pode ser removido.";
+            return RedirectToAction("Index");
+        }       
         
-        return RedirectToAction("Index");
     }
 
     [HttpGet]
