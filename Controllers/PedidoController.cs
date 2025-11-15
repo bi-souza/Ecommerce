@@ -17,13 +17,23 @@ namespace Ecommerce.Controllers
         public PedidoController(PixService pixService, IPedidoRepository pedidoRepository)
         {
             _pixService = pixService;
-            this._pedidoRepository = pedidoRepository;
+            _pedidoRepository = pedidoRepository;
         }
 
         [HttpGet]
         [RequireLogin]
         public IActionResult Create()
         {
+            var clienteId = HttpContext.Session.GetInt32("ClienteId");
+            var papel     = HttpContext.Session.GetString("Papel");
+
+            if (clienteId is null && papel == "Admin")
+            {   
+                TempData["ModalMsg"] = "Você não pode finalizar pedidos neste fluxo. Por favor, acesse com uma conta de Cliente para efetuar a compra.";
+
+                return RedirectToAction("Index", "Carrinho");
+            }
+            
             return RedirectToAction("Pagamento");
         }
         
