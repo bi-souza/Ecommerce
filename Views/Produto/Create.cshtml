@@ -1,3 +1,4 @@
+@model Ecommerce.Models.Produto
 <html>
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -14,22 +15,6 @@
             <input name="NomeProduto" class="form-control"/>
             <br/>
 
-            <label>Descrição:</label>
-            <textarea name="Descricao" class="form-control"></textarea>
-            <br/>
-
-            <label>Preço:</label>
-            <input name="Preco" type="text" class="form-control" />
-            <br/>
-
-            <label>Estoque:</label>
-            <input name="Estoque" type="number" class="form-control"/>
-            <br/>
-
-            <label>URL da Imagem:</label>
-            <input name="ImagemUrl" class="form-control"/>
-            <br/>
-
             <label>Categoria:</label>
             <select name="CategoriaId" class="form-control">
                 @foreach(var categoria in ViewBag.Categorias) { 
@@ -37,6 +22,24 @@
                 }
             </select>
             <br/>
+
+            <label>Descrição:</label>
+            <textarea name="Descricao" class="form-control"></textarea>
+            <br/>
+
+            <label asp-for="Preco"></label>
+            <input asp-for="Preco" class="form-control" />
+            <span asp-validation-for="Preco" class="text-danger"></span>
+            <br/>
+
+            <label asp-for="Estoque"></label>
+            <input asp-for="Estoque" class="form-control"/>
+            <span asp-validation-for="Estoque" class="text-danger"></span>
+            <br/>
+
+            <label>URL da Imagem:</label>
+            <input name="ImagemUrl" class="form-control"/>
+            <br/>            
 
             <label>Destaque:</label>
             <select name="Destaque" class="form-control">
@@ -47,5 +50,8 @@
 
             <button class="btn btn-outline-success">Salvar</button>
         </form>
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }
     @*</body>*@
 </html>
