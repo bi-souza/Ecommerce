@@ -9,7 +9,7 @@ public interface IProdutoRepository
     List<Produto> ReadAll();
     Produto Read(int id);
     void Create(Produto model);
-    void Delete(int id);
+    bool Delete(int id);
     void Update(Produto model);
     List<Produto> Search(string termo);
 }

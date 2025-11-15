@@ -29,7 +29,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         cmd.ExecuteNonQuery();
     }
 
-    public void Delete(int id)
+    public bool Delete(int id)
     {        
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
@@ -37,8 +37,24 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         cmd.CommandText = "DELETE FROM Produtos WHERE IdProduto = @id";
         
         cmd.Parameters.AddWithValue("@id", id);
-        
-        cmd.ExecuteNonQuery();
+
+        try
+        {
+            cmd.ExecuteNonQuery();
+            return true; 
+        }
+
+        catch (SqlException ex)
+        {
+            
+            if (ex.Number == 547)
+            {
+                return false; 
+            }           
+            
+            throw; 
+        }        
+       
     }
     
     public void Update(Produto model)
