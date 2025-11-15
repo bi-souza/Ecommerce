@@ -76,7 +76,7 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
     } 
 
     
-    public void Delete(int id)
+    public bool Delete(int id)
     {
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
@@ -85,7 +85,23 @@ public class CategoriaDatabaseRepository : DbConnection, ICategoriaRepository
         
         cmd.Parameters.AddWithValue("@IdCategoria", id);
 
-        cmd.ExecuteNonQuery();
+        try
+        {
+            cmd.ExecuteNonQuery();
+            return true; 
+        }
+
+        catch (SqlException ex)
+        {
+            
+            if (ex.Number == 547)
+            {
+                return false; 
+            }           
+            
+            throw; 
+        }      
+        
     }   
 
     
