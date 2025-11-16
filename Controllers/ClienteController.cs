@@ -67,17 +67,52 @@ namespace Ecommerce.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditarPerfil(Cliente cliente)
+        public ActionResult EditarPerfil(ClientePerfilViewModel model)
         {
             if (!ModelState.IsValid)
-                return View("Perfil", cliente);
-            var existente = repository.BuscarPorEmail(cliente.Email);
-            if (existente != null && existente.IdCliente != cliente.IdCliente)
             {
-                ViewBag.Error = "E-mail já cadastrado por outro usuário.";
-                return View("Perfil", cliente);
+                
+                var clienteComErros = repository.BuscarPorId(model.IdCliente);
+                
+                
+                if (clienteComErros != null)
+                {
+                    clienteComErros.Nome = model.Nome;
+                    clienteComErros.Email = model.Email;
+                    clienteComErros.Telefone = model.Telefone;
+                }
+                                
+                ViewBag.Error = "Falha na validação dos dados. Verifique Nome, E-mail e Telefone.";
+                return View("Perfil", clienteComErros); 
             }
-            repository.Atualizar(cliente);
+                        
+            var existente = repository.BuscarPorEmail(model.Email);
+                        
+            if (existente != null && existente.IdCliente != model.IdCliente)
+            {                
+                var clienteComErros = repository.BuscarPorId(model.IdCliente);                
+                
+                if (clienteComErros != null) clienteComErros.Email = model.Email;
+                
+                ViewBag.Error = "E-mail já cadastrado por outro usuário.";
+                return View("Perfil", clienteComErros);
+            }           
+            
+            
+            var clienteParaAtualizar = repository.BuscarPorId(model.IdCliente);
+            
+            if (clienteParaAtualizar == null)
+            {
+                
+                return RedirectToAction("Login", "Auth");
+            }            
+            
+            clienteParaAtualizar.Nome = model.Nome;
+            clienteParaAtualizar.Email = model.Email;
+            clienteParaAtualizar.Telefone = model.Telefone;
+            
+            repository.Atualizar(clienteParaAtualizar); 
+
             TempData["Mensagem"] = "Perfil atualizado com sucesso!";
             return RedirectToAction("Perfil");
         }

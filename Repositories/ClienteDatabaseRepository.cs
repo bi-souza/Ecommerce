@@ -158,21 +158,23 @@ namespace Ecommerce.Repositories
                                 
             cmd.Parameters.AddWithValue("@Id", id);
 
-            SqlDataReader reader = cmd.ExecuteReader();
-                
-            if (reader.Read())
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
-                return new Cliente
+                
+                if (reader.Read())
                 {
-                    IdCliente = (int)reader["IdCliente"],                            
-                    Nome = reader["Nome"].ToString(), 
-                    Email = reader["Email"].ToString(),
-                    Cpf = reader["Cpf"].ToString(),
-                    Telefone = reader["Telefone"].ToString(),
-                    DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
-                    SenhaHash = reader["SenhaHash"].ToString()
-                };
-            }               
+                    return new Cliente
+                    {
+                        IdCliente = (int)reader["IdCliente"],                            
+                        Nome = reader["Nome"].ToString(), 
+                        Email = reader["Email"].ToString(),
+                        Cpf = reader["Cpf"].ToString(),
+                        Telefone = reader["Telefone"].ToString(),
+                        DataNasc = reader["DataNasc"] == DBNull.Value ? default : Convert.ToDateTime(reader["DataNasc"]),
+                        SenhaHash = reader["SenhaHash"].ToString()
+                    };
+                } 
+            }              
             return null;
             
         }
