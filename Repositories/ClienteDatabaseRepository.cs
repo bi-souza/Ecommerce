@@ -176,7 +176,7 @@ namespace Ecommerce.Repositories
             return null;
             
         }
-        public void EditarPerfil(Cliente cliente)
+        public void Atualizar(Cliente cliente)
         {   
             
             SqlCommand cmd = new SqlCommand();
@@ -194,7 +194,7 @@ namespace Ecommerce.Repositories
             cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone ?? string.Empty);
             cmd.Parameters.AddWithValue("@IdCliente", cliente.IdCliente);          
             
-            
+            cmd.ExecuteNonQuery();
             
         }
 
@@ -235,7 +235,7 @@ namespace Ecommerce.Repositories
 
             try
             {   
-                cmdPessoa.CommandText = "DELETE FROM Clientes WHERE IdPessoa = @Id";                                       
+                cmdPessoa.CommandText = "DELETE FROM Clientes WHERE IdCliente = @Id";                                       
                                
                 cmdPessoa.Parameters.AddWithValue("@Id", id);
                 cmdPessoa.ExecuteNonQuery();
