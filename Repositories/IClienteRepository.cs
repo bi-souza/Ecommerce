@@ -9,7 +9,7 @@ public interface IClienteRepository
     Cliente BuscarPorEmail(string email);
     Cliente BuscarPorCpf(string cpf);
     Cliente BuscarPorId(int id);
-    void EditarPerfil(Cliente cliente);
+    void Atualizar(Cliente cliente);
     void Excluir(int id);
     bool VerificarSenhaAtual(int id, string senhaAtual);
     void AlterarSenha(int id, string novaSenha);
