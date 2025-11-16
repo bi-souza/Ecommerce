@@ -15,15 +15,21 @@ namespace Ecommerce.Controllers
         
         public ActionResult Cadastro()
         {
-            return View();
+            return View(new Cliente());
         }
 
-        /*[HttpPost]
+        [HttpPost]
         public ActionResult Cadastro(Cliente cliente)
         {
             if (repository.BuscarPorEmail(cliente.Email) != null)
             {
                 ViewBag.Error = "E-mail já cadastrado.";
+                return View(cliente);
+            }
+
+            if (repository.BuscarPorCpf(cliente.Cpf) != null)
+            {                
+                ViewBag.Error = "CPF já cadastrado."; 
                 return View(cliente);
             }
 
@@ -49,7 +55,7 @@ namespace Ecommerce.Controllers
             repository.Cadastrar(cliente);
 
             TempData["Mensagem"] = "Cadastro realizado com sucesso!";
-            return RedirectToAction("Login", "Cliente");
+            return RedirectToAction("Login", "Auth");
         }
         public ActionResult Perfil()
         {
@@ -113,6 +119,6 @@ namespace Ecommerce.Controllers
                 HttpContext.Session.Clear();
             }
             return RedirectToAction("Index", "Home");
-        }*/
+        }
     }
 }
