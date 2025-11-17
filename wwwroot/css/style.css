@@ -197,3 +197,20 @@
     color: #4A5D23; /* Um verde um pouco mais escuro */
     text-decoration: underline;
 }
+
+.btn-voltar-custom {
+    border: 2px solid var(--cor-verde-floresta);
+    color: var(--cor-verde-floresta);
+    font-weight: 500;
+    padding: 6px 14px;
+    background-color: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-voltar-custom:hover {
+    border: 2px solid var(--cor-verde-floresta);
+    background-color: white;
+    color: var(--cor-verde-floresta);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}

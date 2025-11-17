@@ -10,10 +10,6 @@
         <h1 class="mb-4">Novo Produto</h1>
         
         <form action="/produto/create" method="POST">
-            
-            <label>Nome do Produto:</label>
-            <input name="NomeProduto" class="form-control"/>
-            <br/>
 
             <label>Categoria:</label>
             <select name="CategoriaId" class="form-control">
@@ -21,6 +17,10 @@
                     <option value="@categoria.IdCategoria">@categoria.NomeCategoria</option>
                 }
             </select>
+            <br/>
+            
+            <label>Nome do Produto:</label>
+            <input name="NomeProduto" class="form-control"/>
             <br/>
 
             <label>Descrição:</label>
