@@ -106,7 +106,7 @@ public class ProdutoController : Controller
     [HttpGet]
     public ActionResult Detalhes(int id)
     {
-        var produto = produtoRepository.Read(id);
+        var produto = produtoRepository.ReadComAvaliacao(id);
 
         if (produto == null)
         {

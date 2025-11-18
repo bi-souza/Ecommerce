@@ -12,4 +12,5 @@ public interface IProdutoRepository
     bool Delete(int id);
     void Update(Produto model);
     List<Produto> Search(string termo);
+    ProdutoAvaliacaoViewModel ReadComAvaliacao(int id);
 }
