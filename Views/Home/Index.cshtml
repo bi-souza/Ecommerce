@@ -107,7 +107,58 @@
         </button>
     </div>
 
-    </br><div class="row mb-3">
+    <br/><div class="row mb-3">
+        <div class="col">
+            <h2>MAIS VENDIDOS <span style="color: var(--cor-cinza-escuro); font-weight: 300;"></span></h2>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (ViewBag.MaisVendidos != null && ((IEnumerable<Ecommerce.Models.Produto>)ViewBag.MaisVendidos).Any())
+        {
+            foreach (var produto in (IEnumerable<Ecommerce.Models.Produto>)ViewBag.MaisVendidos)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card product-card h-100">
+
+                        @{
+                            var imagePath = string.IsNullOrEmpty(produto.ImagemUrl)
+                                ? "/images/placeholder-produto.jpg"
+                                : produto.ImagemUrl;
+                        }
+                        <img src="@imagePath" class="card-img-top" alt="@produto.NomeProduto">
+
+                        <div class="card-body">
+                            <h5 class="card-title">@produto.NomeProduto</h5>
+
+                            <div class="product-stars">
+                                <i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i><i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-alt"></i>
+                                <span class="text-muted" style="font-size: 0.8rem;">(4.5)</span>
+                            </div>
+
+                            <h4 style="color: var(--cor-verde-floresta);">R$ @produto.Preco.ToString("F2")</h4>
+
+                            <a asp-controller="Produto"
+                            asp-action="Detalhes"
+                            asp-route-id="@produto.IdProduto"
+                            class="btn btn-outline-success w-100">
+                            Ver Detalhes
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Nenhum produto mais vendido ainda.</p>
+        }
+    </div>
+
+        </br><div class="row mb-3">
         <div class="col">
             <h2>EM DESTAQUE <span style="color: var(--cor-cinza-escuro); font-weight: 300;"></span></h2>
         </div>
