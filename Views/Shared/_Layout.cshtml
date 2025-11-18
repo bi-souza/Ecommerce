@@ -3,15 +3,10 @@
 <html lang="pt-br">
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
-@inject Ecommerce.Repositories.ICategoriaRepository CategoriaRepository
 @{
     
     var nomeCliente = Context.Session.GetString("NomeCliente");
     
-    
-    var todasCategorias = CategoriaRepository.ReadAll(); 
-    var categoriasVisiveis = todasCategorias.Take(4).ToList();   
-    var categoriasDropdown = todasCategorias.Skip(4).ToList();   
 }
 
 <head>
@@ -139,30 +134,8 @@
         <nav class="navbar navbar-expand-sm navbar-categorias">
             <div class="container">
                 <div class="navbar-nav d-flex">
-                    
-                    @foreach (var cat in categoriasVisiveis)
-                    {
-                        <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="@cat.IdCategoria">@cat.NomeCategoria</a>
-                    }
-                    
-                    
-                    @if (categoriasDropdown.Any())
-                    {
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Mais Categorias
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @foreach (var cat in categoriasDropdown)
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="@cat.IdCategoria">@cat.NomeCategoria</a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                    
+                   @await Component.InvokeAsync("MenuCategorias")                     
+                                       
                     
                 </div>
             </div>
