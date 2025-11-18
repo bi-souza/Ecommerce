@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using System.Text.Json;
 using Ecommerce.Models;
 using Ecommerce.Services; 
@@ -88,58 +87,23 @@ namespace Ecommerce.Controllers
         
 
         [HttpPost]
-        [RequireLogin]
+        [RequireLogin]     
         public IActionResult ConfirmarPagamento(int pedidoId)
         {
-            var cfg = HttpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration
-                    ?? throw new InvalidOperationException("IConfiguration não disponível.");
-            var cs = cfg.GetConnectionString("default")
-                    ?? throw new InvalidOperationException("ConnectionString 'default' não encontrada.");
-
-            using var con = new SqlConnection(cs);
-            con.Open();
-            using var tx = con.BeginTransaction();
-
             try
-            {
-                decimal total;
-                using (var getCmd = new SqlCommand("SELECT ValorTotal FROM Pedidos WHERE IdPedido=@id", con, tx))
-                {
-                    getCmd.Parameters.AddWithValue("@id", pedidoId);
-                    var obj = getCmd.ExecuteScalar();
-                    if (obj is null) throw new Exception("Pedido não encontrado.");
-                    total = Convert.ToDecimal(obj);
-                }
-                using (var pagCmd = new SqlCommand(@"
-                    INSERT INTO Pagamentos (ValorPago, TipoPagamento, PedidoId)
-                    VALUES (@valor, @tipo, @pedido);", con, tx))
-                {
-                    pagCmd.Parameters.AddWithValue("@valor", total);
-                    pagCmd.Parameters.AddWithValue("@tipo",  "Pix");
-                    pagCmd.Parameters.AddWithValue("@pedido", pedidoId);
-                    pagCmd.ExecuteNonQuery();
-                }
-
-                using (var updCmd = new SqlCommand(@"
-                    UPDATE Pedidos SET StatusPedido='Concluído' WHERE IdPedido=@id;", con, tx))
-                {
-                    updCmd.Parameters.AddWithValue("@id", pedidoId);
-                    updCmd.ExecuteNonQuery();
-                }
-                
-                tx.Commit();
+            {                
+                _pedidoRepository.ConfirmarPagamento(pedidoId);                 
+               
                 HttpContext.Session.Remove("CART");
                 TempData["Msg"] = $"Pagamento do pedido #{pedidoId} confirmado com sucesso!";
                 return RedirectToAction("Confirmado");
             }
-            catch
-            {
-                try { tx.Rollback(); } catch { /* ignore */ }
+            catch 
+            {                
                 TempData["Msg"] = "Falha ao confirmar o pagamento.";
                 return RedirectToAction("Index", "Carrinho");
             }
         }
-
 
         [RequireLogin]
         public IActionResult Confirmado()

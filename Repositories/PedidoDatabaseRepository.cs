@@ -30,64 +30,7 @@ public class PedidoDatabaseRepository : DbConnection, IPedidoRepository
 
         return count > 0;
     }
-
-
-    public List<PedidoDetalheView> BuscarHistoricoPorCliente(int clienteId)
-    {
-        List<PedidoDetalheView> historico = new List<PedidoDetalheView>();
-
-
-        SqlCommand cmd = new SqlCommand("SP_BuscarHistoricoCliente", conn);
-        cmd.CommandType = CommandType.StoredProcedure;
-        cmd.Parameters.AddWithValue("@ClienteId", clienteId);
-
-        using (SqlDataReader reader = cmd.ExecuteReader())
-        {
-
-            while (reader.Read())
-            {
-                historico.Add(new PedidoDetalheView
-                {
-                    IdPedido = (int)reader["IdPedido"],
-                    DataPedido = (DateTime)reader["DataPedido"],
-                    ValorTotal = (decimal)reader["ValorTotal"],
-                    StatusPedido = reader["StatusPedido"].ToString()
-                });
-            }
-
-
-            if (!historico.Any())
-            {
-                return historico;
-            }
-
-
-            if (reader.NextResult())
-            {
-
-                var pedidoLookup = historico.ToDictionary(p => p.IdPedido);
-
-                while (reader.Read())
-                {
-                    int pedidoId = (int)reader["PedidoId"];
-
-
-                    if (pedidoLookup.TryGetValue(pedidoId, out var pedido))
-                    {
-                        pedido.Itens.Add(new ItemPedidoHistoricoView
-                        {
-                            NomeProduto = reader["NomeProduto"].ToString(),
-                            Quantidade = (int)reader["Quantidade"],
-                            PrecoUnitario = (decimal)reader["PrecoUnit"]
-                        });
-                    }
-                }
-            }
-        }
-
-        return historico;
-
-    }
+    
 
     public int CriarPedidoComItens(int clienteId, decimal total, List<CartItem> cart)
     {     
@@ -143,6 +86,55 @@ public class PedidoDatabaseRepository : DbConnection, IPedidoRepository
         }
         
     }
+    
+    public void ConfirmarPagamento(int pedidoId)
+    {     
+                            
+        SqlTransaction tx = conn.BeginTransaction(); 
+
+        try
+        {
+            decimal total;            
+            
+            using (var getCmd = new SqlCommand("SELECT ValorTotal FROM Pedidos WHERE IdPedido=@id", conn, tx))
+            {
+                getCmd.Parameters.AddWithValue("@id", pedidoId);
+                var obj = getCmd.ExecuteScalar();
+                if (obj is null) 
+                {
+                    
+                    throw new InvalidOperationException($"Pedido ID {pedidoId} não encontrado.");
+                }
+                total = Convert.ToDecimal(obj);
+            }
+                       
+            using (var pagCmd = new SqlCommand(@"
+                INSERT INTO Pagamentos (ValorPago, TipoPagamento, PedidoId)
+                VALUES (@valor, @tipo, @pedido);", conn, tx))
+            {
+                pagCmd.Parameters.AddWithValue("@valor", total);                
+                pagCmd.Parameters.AddWithValue("@tipo", "Pix"); 
+                pagCmd.Parameters.AddWithValue("@pedido", pedidoId);
+                pagCmd.ExecuteNonQuery();
+            }
+            
+            using (var updCmd = new SqlCommand(@"
+                UPDATE Pedidos SET StatusPedido='Concluído' WHERE IdPedido=@id;", conn, tx))
+            {
+                updCmd.Parameters.AddWithValue("@id", pedidoId);
+                updCmd.ExecuteNonQuery();
+            }            
+            
+            tx.Commit();
+        }
+        catch (Exception ex)
+        {            
+            try { tx.Rollback(); } catch { /* ignore */ }            
+            
+            throw new Exception("Falha transacional ao confirmar pagamento.", ex); 
+        }
+    }
+
 }
 
 
