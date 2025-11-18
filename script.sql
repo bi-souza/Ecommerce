@@ -170,3 +170,125 @@ VALUES (@NovoClienteId);
 
 -- VERIFICAÇÃO (OPCIONAL)
 SELECT 'Cliente Inserido com sucesso!' AS Status, @NovoClienteId AS IdPessoa_IdCliente;
+
+-- 1º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 29.40, 'Concluído');
+
+DECLARE @Pedido1 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido1, 1, 2, 14.50, 29.00);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido1, 29.40, 'Pix');
+
+-- 2º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 31.80, 'Concluído');
+
+DECLARE @Pedido2 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido2, 3, 2, 9.80, 19.60),
+       (@Pedido2, 4, 1, 18.00, 18.00);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido2, 31.80, 'Crédito');
+
+-- 3º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 49.90, 'Em andamento');
+
+DECLARE @Pedido3 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido3, 5, 1, 49.90, 49.90);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido3, 49.90, 'Débito');
+
+-- 4º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 53.00, 'Concluído');
+
+DECLARE @Pedido4 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido4, 6, 2, 15.00, 30.00),
+       (@Pedido4, 7, 1, 38.00, 38.00);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido4, 53.00, 'Pix');
+
+-- 5º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 72.00, 'Concluído');
+
+DECLARE @Pedido5 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido5, 8, 1, 72.00, 72.00);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido5, 72.00, 'Crédito');
+
+-- 6º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 39.80, 'Em andamento');
+
+DECLARE @Pedido6 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido6, 9, 2, 19.90, 39.80);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido6, 39.80, 'Dinheiro');
+
+-- 7º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 14.50, 'Aguardando pagamento');
+
+DECLARE @Pedido7 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido7, 1, 1, 14.50, 14.50);
+
+-- 8º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 40.80, 'Concluído');
+
+DECLARE @Pedido8 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido8, 3, 1, 9.80, 9.80),
+       (@Pedido8, 4, 1, 18.00, 18.00),
+       (@Pedido8, 6, 1, 15.00, 15.00);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido8, 40.80, 'Pix');
+
+-- 9º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 38.00, 'Concluído');
+
+DECLARE @Pedido9 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido9, 7, 1, 38.00, 38.00);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido9, 38.00, 'Débito');
+
+-- 10º Pedido
+INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
+VALUES (2, 67.80, 'Concluído');
+
+DECLARE @Pedido10 INT = SCOPE_IDENTITY();
+
+INSERT INTO ItensPedido (PedidoId, ProdutoId, Quantidade, PrecoUnit, ValorItem)
+VALUES (@Pedido10, 5, 1, 49.90, 49.90),
+       (@Pedido10, 9, 1, 19.90, 19.90);
+
+INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
+VALUES (@Pedido10, 67.80, 'Crédito');
