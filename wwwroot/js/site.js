@@ -21,4 +21,14 @@ $(document).ready(function () {
 
     // Opcional, mas recomendado: Limitar o comprimento para CPF (11 dígitos)
     $('.js-numbers-only[asp-for="Cpf"]').attr('maxlength', '11');
+
+        /* Correção para validação de números com vírgula (pt-BR) */
+    $.validator.methods.number = function (value, element) {
+        return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:[\s\.,]\d{3})+)(?:[\.,]\d+)?$/.test(value);
+    }
+
+    $.validator.methods.range = function (value, element, param) {
+        var globalizedValue = value.replace(",", ".");
+        return this.optional(element) || (globalizedValue >= param[0] && globalizedValue <= param[1]);
+    }
 });

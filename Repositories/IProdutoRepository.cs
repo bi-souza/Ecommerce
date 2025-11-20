@@ -13,4 +13,5 @@ public interface IProdutoRepository
     void Update(Produto model);
     List<Produto> Search(string termo);
     ProdutoAvaliacaoViewModel ReadComAvaliacao(int id);
+    List<EstoqueCriticoViewModel> ReadEstoqueCritico(int nivelMinimo, int diasRecentes);
 }
