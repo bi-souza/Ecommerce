@@ -40,18 +40,34 @@ public class ProdutoController : Controller
     [RequireAdmin]
     public ActionResult Create(Produto model)
     {      
-        produtoRepository.Create(model);
+        if (ModelState.IsValid) 
+        {        
+            produtoRepository.Create(model);
+            return RedirectToAction("Index");
+        }
         
-        return RedirectToAction("Index", "Home");
+        ViewBag.Categorias = categoriaRepository.ReadAll();
+        return View(model);       
+        
     }
 
     [HttpPost] 
     [RequireAdmin]
     public ActionResult Delete(int id)
     {
-        produtoRepository.Delete(id);
+       bool deleted = produtoRepository.Delete(id);
+
+        if (deleted)
+        {
+            return RedirectToAction("Index");
+        }
+
+        else
+        {
+            TempData["DeleteError"] = $"A exclusão do produto (ID: {id}) não foi permitida. O item possui histórico de pedidos e não pode ser removido.";
+            return RedirectToAction("Index");
+        }       
         
-        return RedirectToAction("Index");
     }
 
     [HttpGet]
@@ -75,17 +91,22 @@ public class ProdutoController : Controller
     [RequireAdmin]
     public ActionResult Update(int id, Produto model)
     {        
-        model.IdProduto = id;      
-        
-        produtoRepository.Update(model);
-        
-        return RedirectToAction("Index");
+        model.IdProduto = id;
+
+        if (ModelState.IsValid) 
+        {     
+            produtoRepository.Update(model);
+            return RedirectToAction("Index");
+        }
+
+        ViewBag.Categorias = categoriaRepository.ReadAll();
+        return View(model);         
     }
 
     [HttpGet]
     public ActionResult Detalhes(int id)
     {
-        var produto = produtoRepository.Read(id);
+        var produto = produtoRepository.ReadComAvaliacao(id);
 
         if (produto == null)
         {

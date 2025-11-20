@@ -1,165 +1,89 @@
 @model Ecommerce.Models.Cliente
 @{
-    ViewData["Title"] = "Meu Perfil";
+    ViewData["Title"] = "Cadastro de Cliente";
 }
 
 <div class="container mt-5 mb-5">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">Meu Perfil</h4>
-            <button class="btn btn-light btn-sm" id="editarBtn">Editar</button>
-        </div>
-
-        <div class="card-body">
-            <form id="perfilForm">
-                <input type="hidden" id="IdCliente" value="@Model.IdCliente" />
-
-                <div class="mb-3">
-                    <label for="NomeCliente" class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="NomeCliente" name="NomeCliente" value="@Model.Nome" readonly>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Cadastre-se</h4>
                 </div>
+                <div class="card-body">
+                    
+                    @* Exibe erros customizados do Controller, como "E-mail já cadastrado." *@
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @ViewBag.Error
+                        </div>
+                    }
 
-                <div class="mb-3">
-                    <label for="Email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" readonly>
+                    @* O formulário submete para a Action [HttpPost] Cadastro(Cliente cliente) *@
+                    <form asp-action="Cadastro" method="post">
+                        
+                        @* **Validação sumária do Modelo (ModelState)** *@
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nome" class="form-label"></label>
+                            <input asp-for="Nome" class="form-control" />
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Cpf" class="form-label"></label>
+                            <input asp-for="Cpf" type="tel" inputmode="numeric" class="form-control" placeholder="Apenas dígitos" maxlength="11"/>
+                            <span asp-validation-for="Cpf" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Telefone" class="form-label"></label>
+                            <input asp-for="Telefone" type="tel" inputmode="numeric" class="form-control" placeholder="DDD + Telefone (apenas dígitos)" maxlength="11"/>
+                            <span asp-validation-for="Telefone" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DataNasc" class="form-label">Data de Nascimento (dd/mm/aaaa)</label>                            
+                            @* O tipo "date" é importante para o input de DataNasc *@
+                            <input asp-for="DataNasc" type="text" class="form-control" placeholder="Ex: 01/01/2002" />
+                            <span asp-validation-for="DataNasc" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SenhaHash" class="form-label">Senha</label>
+                            @* O tipo "password" garante que o valor não seja visível *@
+                            <input asp-for="SenhaHash" type="password" class="form-control" />
+                            <span asp-validation-for="SenhaHash" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ConfirmarSenha" class="form-label">Confirmar Senha</label>
+                            <input asp-for="ConfirmarSenha" type="password" class="form-control" />
+                            <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success">Finalizar Cadastro</button>
+                        </div>
+                        <p class="mt-3 text-center">
+                            Já tem conta? <a asp-controller="Auth" asp-action="Login">Faça Login</a>
+                        </p>
+                    </form>
                 </div>
-
-                <div class="mb-3">
-                    <label for="Telefone" class="form-label">Telefone</label>
-                    <input type="text" class="form-control" id="Telefone" name="Telefone" value="@Model.Telefone" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="SenhaHash" class="form-label">Senha</label>
-                    <div class="input-group">
-                        <input type="password" class="form-control" id="SenhaHash" name="SenhaHash" placeholder="Digite sua nova senha" readonly>
-                        <button type="button" class="btn btn-outline-secondary" id="toggleSenha">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="ConfirmarSenha" class="form-label">Confirmar Senha</label>
-                    <input type="password" class="form-control" id="ConfirmarSenha" placeholder="Confirme sua nova senha" readonly>
-                </div>
-
-                <div class="text-end">
-                    <button type="button" class="btn btn-success d-none" id="salvarBtn">Salvar Alterações</button>
-                    <button type="button" class="btn btn-secondary d-none" id="cancelarBtn">Cancelar</button>
-                </div>
-            </form>
-
-            <hr class="my-4">
-
-            <div class="text-end">
-                <button class="btn btn-outline-danger" id="excluirContaBtn">Excluir minha conta</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modalSaida" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Alterações não salvas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                Você fez alterações que ainda não foram salvas. Deseja sair mesmo assim?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmarSaida">Sair sem salvar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modalExcluir" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Excluir Conta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                Tem certeza que deseja excluir sua conta? Esta ação <strong>não pode ser desfeita</strong>.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" id="confirmarExclusao">Excluir</button>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script>
-        const form = document.getElementById("perfilForm");
-        const inputs = form.querySelectorAll("input");
-        const editarBtn = document.getElementById("editarBtn");
-        const salvarBtn = document.getElementById("salvarBtn");
-        const cancelarBtn = document.getElementById("cancelarBtn");
-        let alterado = false;
-
-        document.getElementById("toggleSenha").addEventListener("click", function () {
-            const senha = document.getElementById("SenhaHash");
-            senha.type = senha.type === "password" ? "text" : "password";
-        });
-
-        editarBtn.addEventListener("click", () => {
-            inputs.forEach(i => i.removeAttribute("readonly"));
-            editarBtn.classList.add("d-none");
-            salvarBtn.classList.remove("d-none");
-            cancelarBtn.classList.remove("d-none");
-        });
-
-        inputs.forEach(input => {
-            input.addEventListener("input", () => alterado = true);
-        });
-
-        cancelarBtn.addEventListener("click", () => {
-            if (alterado) {
-                new bootstrap.Modal(document.getElementById("modalSaida")).show();
-            } else {
-                location.reload();
-            }
-        });
-
-        document.getElementById("confirmarSaida").addEventListener("click", () => {
-            location.reload();
-        });
-
-        salvarBtn.addEventListener("click", () => {
-            const senha = document.getElementById("SenhaHash").value;
-            const confirmar = document.getElementById("ConfirmarSenha").value;
-
-            if (senha !== confirmar) {
-                alert("As senhas não coincidem!");
-                return;
-            }
-
-            const dados = Object.fromEntries(new FormData(form));
-
-            fetch("/Cliente/Atualizar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dados)
-            })
-                .then(res => res.ok ? alert("Perfil atualizado com sucesso!") : alert("Erro ao salvar alterações."))
-                .then(() => location.reload());
-        });
-
-        document.getElementById("excluirContaBtn").addEventListener("click", () => {
-            new bootstrap.Modal(document.getElementById("modalExcluir")).show();
-        });
-
-        document.getElementById("confirmarExclusao").addEventListener("click", () => {
-            fetch("/Cliente/Excluir", { method: "DELETE" })
-                .then(res => res.ok ? alert("Conta excluída com sucesso!") : alert("Erro ao excluir conta."))
-                .then(() => window.location.href = "/Home/Index");
-        });
-    </script>
+    @* Garante a validação de campos no lado do cliente (client-side validation) *@
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

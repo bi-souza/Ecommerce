@@ -1,4 +1,4 @@
-@model Ecommerce.Models.Produto
+@model Ecommerce.Models.ProdutoAvaliacaoViewModel
 
 @{
     ViewData["Title"] = Model.NomeProduto;
@@ -13,6 +13,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <div class="container mt-5">
+    <a href="javascript:history.back()" 
+    class="btn btn-voltar-custom mb-3">
+        ← Voltar
+    </a>
+
     <div class="row">
         <div class="col-md-6">
             <img src="@(string.IsNullOrEmpty(Model.ImagemUrl) ? "/images/placeholder.jpg" : Model.ImagemUrl)"
@@ -23,9 +28,43 @@
             <h2>@Model.NomeProduto</h2>
             <p class="lead">@Model.Descricao</p>
 
+            @{
+                // 1. Lógica de Arredondamento: Arredonda a média para a meia estrela mais próxima.
+                // Ex: 4.3 -> 4.5; 4.7 -> 5.0
+                decimal mediaArredondada = Math.Round(Model.MediaAvaliacao * 2, MidpointRounding.AwayFromZero) / 2;
+                
+                int estrelasCheias = (int)Math.Floor(mediaArredondada);
+                bool temMeiaEstrela = (mediaArredondada - estrelasCheias) == 0.5m;
+                int estrelasVazias = 5 - estrelasCheias - (temMeiaEstrela ? 1 : 0);
+            }
+
             <div class="product-stars mb-3" style="color: #FFD700;">
-                <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i> <i class="fa fa-star-half-alt"></i>
+                @if (Model.MediaAvaliacao > 0)
+                {
+                    // Renderiza Estrelas Cheias (Solid Star: fa fa-star)
+                    @for (int i = 0; i < estrelasCheias; i++)
+                    {
+                        <i class="fa fa-star"></i> 
+                    }
+
+                    // Renderiza Meia Estrela (Half Star: fa fa-star-half-alt)
+                    @if (temMeiaEstrela)
+                    {
+                        <i class="fa fa-star-half-alt"></i> 
+                    }
+
+                    // Renderiza Estrelas Vazias (Regular Star: far fa-star)
+                    @for (int i = 0; i < estrelasVazias; i++)
+                    {
+                        <i class="far fa-star" style="color: #ccc;"></i> 
+                    }
+                    
+                    <span class="text-muted small ms-2">(@Model.MediaAvaliacao.ToString("N2"))</span>
+                }
+                else
+                {
+                    <span class="text-muted small">Produto sem avaliações.</span>
+                }
             </div>
 
             <h3 style="color: var(--cor-verde-floresta);">R$ @Model.Preco.ToString("F2")</h3>
@@ -51,9 +90,6 @@
                     </div>
                 </div>
             </form>     
-            
-
-            <a href="javascript:history.back()" class="btn btn-dark btn-lg w-100 mt-2">Voltar</a>
         </div>
     </div>
 

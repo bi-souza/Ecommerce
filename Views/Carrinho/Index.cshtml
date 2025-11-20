@@ -55,10 +55,45 @@ else
         </tfoot>
     </table>
 
-
     <form asp-controller="Pedido" asp-action="Create" method="get">
         <button class="btn btn-success btn-lg">Finalizar pedido</button>
     </form>
+
+    <form asp-action="Limpar" method="post">
+        <button class="btn btn-warning">Limpar carrinho</button>
+    </form>
 }
 
+<div class="modal fade" id="alertaAdminModal" tabindex="-1" aria-labelledby="alertaAdminModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="alertaAdminModalLabel">Ação Não Autorizada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+      </div>
+      <div class="modal-footer">
+        <a href="/Auth/Logout" class="btn btn-danger">Fazer Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+@if (TempData["ModalMsg"] != null)
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtém o valor do TempData
+            var message = @Html.Raw(Json.Serialize(TempData["ModalMsg"])); 
+            
+            // Coloca a mensagem no corpo do modal
+            document.getElementById('modal-body-content').innerHTML = message;
+
+            // Instancia e mostra o modal (usando Bootstrap 5)
+            var adminModal = new bootstrap.Modal(document.getElementById('alertaAdminModal'));
+            adminModal.show();
+        });
+    </script>
+}

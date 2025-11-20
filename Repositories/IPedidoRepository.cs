@@ -5,8 +5,8 @@ namespace Ecommerce.Repositories;
 public interface IPedidoRepository
 {    
     bool ClienteComprouProduto(int clienteId, int produtoId);
-
-    List<PedidoDetalheView> BuscarHistoricoPorCliente(int clienteId);
-    
+        
     int CriarPedidoComItens(int clienteId, decimal total, List<CartItem> cartItems);
+
+    void ConfirmarPagamento(int pedidoId);
 }

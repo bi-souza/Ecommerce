@@ -29,7 +29,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         cmd.ExecuteNonQuery();
     }
 
-    public void Delete(int id)
+    public bool Delete(int id)
     {        
         SqlCommand cmd = new SqlCommand();
         cmd.Connection = conn;
@@ -37,8 +37,24 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         cmd.CommandText = "DELETE FROM Produtos WHERE IdProduto = @id";
         
         cmd.Parameters.AddWithValue("@id", id);
-        
-        cmd.ExecuteNonQuery();
+
+        try
+        {
+            cmd.ExecuteNonQuery();
+            return true; 
+        }
+
+        catch (SqlException ex)
+        {
+            
+            if (ex.Number == 547)
+            {
+                return false; 
+            }           
+            
+            throw; 
+        }        
+       
     }
     
     public void Update(Produto model)
@@ -207,6 +223,43 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         }
 
         return lista;
+    }
+
+    public ProdutoAvaliacaoViewModel ReadComAvaliacao(int id)
+    {
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn;        
+        
+        cmd.CommandText = @"
+            SELECT 
+                p.*, 
+                dbo.mediaAvaliacaoProduto(p.IdProduto) AS MediaAvaliacao 
+            FROM 
+                Produtos p 
+            WHERE 
+                p.IdProduto = @id";
+        
+        cmd.Parameters.AddWithValue("@id", id);
+
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {            
+            var produto = new ProdutoAvaliacaoViewModel
+            {                
+                IdProduto = (int)reader["IdProduto"],
+                NomeProduto = (string)reader["NomeProduto"],
+                Descricao = (string)reader["Descricao"],
+                Preco = (decimal)reader["Preco"],
+                Estoque = (int)reader["Estoque"],
+                ImagemUrl = (string)reader["ImagemUrl"],
+                Destaque = (int)reader["Destaque"],
+                CategoriaId = (int)reader["CategoriaId"],               
+                MediaAvaliacao = (decimal)reader["MediaAvaliacao"] 
+            };
+            return produto;
+        }
+        return null; 
     }
 
 }

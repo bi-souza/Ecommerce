@@ -3,15 +3,10 @@
 <html lang="pt-br">
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
-@inject Ecommerce.Repositories.ICategoriaRepository CategoriaRepository
 @{
     
     var nomeCliente = Context.Session.GetString("NomeCliente");
     
-    
-    var todasCategorias = CategoriaRepository.ReadAll(); 
-    var categoriasVisiveis = todasCategorias.Take(4).ToList();   
-    var categoriasDropdown = todasCategorias.Skip(4).ToList();   
 }
 
 <head>
@@ -68,13 +63,22 @@
                     @{
                         
                         var nomeClienteSessao = Context.Session.GetString("NomeCliente");
+                        var nomeAdminSessao   = Context.Session.GetString("NomeAdmin");
                         
-                        
+                        // 2. DETERMINAR SE ALGUÉM ESTÁ LOGADO
+                        bool isUserLoggedIn = !string.IsNullOrEmpty(nomeClienteSessao) || !string.IsNullOrEmpty(nomeAdminSessao);
+                                               
                         string carrinhoController = "Carrinho";
                         string carrinhoAction = "Index";
 
+                        if (!isUserLoggedIn) 
+                        {
+                            carrinhoController = "Auth";
+                            carrinhoAction = "Login";
+                        }
+                    
                         
-                        if (string.IsNullOrEmpty(nomeClienteSessao)) 
+                        @if (string.IsNullOrEmpty(nomeClienteSessao)) 
                         {
                             carrinhoController = "Auth";
                             carrinhoAction = "Login";
@@ -82,17 +86,39 @@
                     }
 
                     
-                    @if (nomeClienteSessao != null)
+                    @if (isUserLoggedIn) // Bloco de exibição: Usuário Logado (Cliente ou Admin)
                     {
+                        // Variáveis para a exibição dinâmica do perfil
+                        string nomeUsuario      = "";
+                        string perfilController = "";
+                        string perfilAction     = "";
+                        string tituloLink       = "";
+
+                        if (!string.IsNullOrEmpty(nomeAdminSessao))
+                        {
+                            // É um Administrador
+                            nomeUsuario      = nomeAdminSessao;
+                            perfilController = "Admin";
+                            perfilAction     = "Dashboard";
+                            tituloLink       = "Gerenciar";
+                        }
+                        else // É um Cliente (já que isUserLoggedIn é true e não é Admin)
+                        {
+                            nomeUsuario      = nomeClienteSessao;
+                            perfilController = "Cliente";
+                            perfilAction     = "Perfil";
+                            tituloLink       = "Meu Perfil";
+                        }
+
                         <div class="d-flex align-items-start me-3">
                             <a asp-controller="Cliente" asp-action="Perfil" class="nav-link p-0" 
-                            title="Meu Perfil" style="margin-right: 5px; margin-top: 3px;">
+                            title="@tituloLink" style="margin-right: 5px; margin-top: 3px;">
                                 <i class="fa fa-user-circle fa-2x"></i>
                             </a>
 
                             <div class="d-flex flex-column align-items-start justify-content-center">
                                 <span style="font-size: 0.9em; font-weight: 500; line-height: 1.2;">
-                                    Olá, @nomeClienteSessao!
+                                    Olá, @nomeUsuario!
                                 </span>
                                 <a asp-controller="Auth" asp-action="Logout" class="nav-link p-0 text-danger" 
                                 data-bs-toggle="modal" data-bs-target="#modalConfirmacaoLogout" 
@@ -102,7 +128,7 @@
                             </div>
                         </div>
                     }
-                    else
+                    else // Bloco de exibição: Usuário Deslogado
                     {
                         <a class="nav-link d-flex align-items-center me-3" 
                         asp-controller="Auth" asp-action="Login">
@@ -138,30 +164,8 @@
         <nav class="navbar navbar-expand-sm navbar-categorias">
             <div class="container">
                 <div class="navbar-nav d-flex">
-                    
-                    @foreach (var cat in categoriasVisiveis)
-                    {
-                        <a class="nav-link" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="@cat.IdCategoria">@cat.NomeCategoria</a>
-                    }
-                    
-                    
-                    @if (categoriasDropdown.Any())
-                    {
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Mais Categorias
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                @foreach (var cat in categoriasDropdown)
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Produto" asp-action="PorCategoria" asp-route-id="@cat.IdCategoria">@cat.NomeCategoria</a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                    
+                   @await Component.InvokeAsync("MenuCategorias")                     
+                                       
                     
                 </div>
             </div>
