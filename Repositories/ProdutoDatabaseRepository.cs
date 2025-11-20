@@ -262,4 +262,39 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
         return null; 
     }
 
+    public List<EstoqueCriticoViewModel> ReadEstoqueCritico(int nivelMinimo, int diasRecentes)
+    {
+        
+        List<EstoqueCriticoViewModel> lista = new List<EstoqueCriticoViewModel>();        
+        
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn; 
+        
+        cmd.CommandText = "SELECT * FROM dbo.estoqueCritico(@NivelMinimoEstoque, @DiasRecentes)";
+        
+        cmd.Parameters.AddWithValue("@NivelMinimoEstoque", nivelMinimo);
+        cmd.Parameters.AddWithValue("@DiasRecentes", diasRecentes);
+        
+        using (SqlDataReader reader = cmd.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                
+                lista.Add(new EstoqueCriticoViewModel
+                {
+                    IdProduto = (int)reader["IdProduto"],
+                    NomeProduto = (string)reader["NomeProduto"],                    
+                    NomeCategoria = (string)reader["NomeCategoria"],
+                    EstoqueAtual = (int)reader["EstoqueAtual"],                    
+                    QuantidadeVendidaRecente = (int)reader["QuantidadeVendidaRecente"],
+                    DiasDeCobertura = reader["DiasDeCobertura"] == DBNull.Value 
+                            ? null 
+                            : (decimal)reader["DiasDeCobertura"]
+                });
+            }
+        }
+        
+        return lista;
+    }
+
 }
