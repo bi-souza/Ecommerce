@@ -141,7 +141,8 @@
                             </a>
 
                             <form asp-controller="Carrinho" asp-action="Create" method="post">
-                    
+
+                                <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Home")" />
                                 @* Campo oculto essencial para passar o ID do produto para o Controller *@
                                 <input type="hidden" name="IdProduto" value="@produto.IdProduto" />
                                 
@@ -210,6 +211,8 @@
                             </a>
 
                             <form asp-controller="Carrinho" asp-action="Create" method="post">
+
+                                <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Home")" />
                     
                                 @* Campo oculto essencial para passar o ID do produto para o Controller *@
                                 <input type="hidden" name="IdProduto" value="@produto.IdProduto" />

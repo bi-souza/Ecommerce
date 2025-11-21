@@ -159,7 +159,7 @@ namespace Ecommerce.Controllers
                         p.Valortotal,
                         p.StatusPedido,
                         COUNT(i.PedidoId) AS QuantidadeItens
-                    FROM Pedido p
+                    FROM Pedidos p
                     LEFT JOIN ItensPedido i ON i.PedidoId = p.IdPedido
                     WHERE p.ClienteId = @cliente
                     GROUP BY 
