@@ -55,16 +55,10 @@ else
         </tfoot>
     </table>
 
-    @if (Model.Any())
-{
     <form asp-controller="Pedido" asp-action="Create" method="get">
         <button class="btn btn-success btn-lg">Finalizar pedido</button>
     </form>
-}
 
-    <form asp-action="Limpar" method="post">
-        <button class="btn btn-warning">Limpar carrinho</button>
-    </form>
 }
 
 <div class="modal fade" id="alertaAdminModal" tabindex="-1" aria-labelledby="alertaAdminModalLabel" aria-hidden="true">
@@ -75,7 +69,7 @@ else
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modal-body-content">
-        </div>
+      </div>
       <div class="modal-footer">
         <a href="/Auth/Logout" class="btn btn-danger">Fazer Logout</a>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>

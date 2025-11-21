@@ -1,20 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;                
+using System.Text.Json;
 using Ecommerce.Models;
-using Ecommerce.Repositories;    
+using Ecommerce.Repositories;
 
 namespace Ecommerce.Controllers
 {
     public class CarrinhoController : Controller
     {
-        private IProdutoRepository repository; 
+        private readonly IProdutoRepository repository;
 
         public CarrinhoController(IProdutoRepository repository)
         {
             this.repository = repository;
         }
 
-        [RequireLogin] 
+        [RequireLogin]
         public ActionResult Index()
         {
             var json = HttpContext.Session.GetString("CART");
@@ -27,7 +27,7 @@ namespace Ecommerce.Controllers
         }
 
         [HttpGet]
-        [RequireLogin] 
+        [RequireLogin]
         public ActionResult Create(int id)
         {
             var item = new CartItem { IdProduto = id, Quantidade = 1 };
@@ -35,11 +35,23 @@ namespace Ecommerce.Controllers
         }
 
         [HttpPost]
-        [RequireLogin] 
-        public ActionResult Create(CartItem form)
+        [RequireLogin]
+        public ActionResult Create(CartItem form, string? returnUrl)
         {
-            var p = repository.Read(form.IdProduto); 
-            if (p == null) return RedirectToAction("Index", "Home");
+            var p = repository.Read(form.IdProduto);
+            if (p == null)
+                return RedirectToAction("Index", "Home");
+
+            if (form.Quantidade > p.Estoque)
+            {
+                TempData["Msg"] =
+                    $"Estoque insuficiente para '{p.NomeProduto}'. Disponível: {p.Estoque} unidades.";
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+
+                return RedirectToAction("Index", "Home");
+            }
 
             var json = HttpContext.Session.GetString("CART");
             var cart = string.IsNullOrEmpty(json)
@@ -66,11 +78,16 @@ namespace Ecommerce.Controllers
             }
 
             HttpContext.Session.SetString("CART", JsonSerializer.Serialize(cart));
-            return RedirectToAction("Index");
+            TempData["Msg"] = "Produto adicionado ao carrinho!";
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index", "Produto");
         }
 
         [HttpGet]
-        [RequireLogin] 
+        [RequireLogin]
         public ActionResult Update(int id)
         {
             var json = HttpContext.Session.GetString("CART");
@@ -80,11 +97,12 @@ namespace Ecommerce.Controllers
 
             var item = cart.FirstOrDefault(i => i.IdProduto == id);
             if (item == null) return RedirectToAction("Index");
+
             return View(item);
         }
 
         [HttpPost]
-        [RequireLogin] 
+        [RequireLogin]
         public ActionResult Update(int id, CartItem form)
         {
             var json = HttpContext.Session.GetString("CART");
@@ -96,13 +114,14 @@ namespace Ecommerce.Controllers
             if (item != null)
             {
                 item.Quantidade = form.Quantidade < 1 ? 1 : form.Quantidade;
+
                 HttpContext.Session.SetString("CART", JsonSerializer.Serialize(cart));
             }
 
             return RedirectToAction("Index");
         }
 
-        [RequireLogin] 
+        [RequireLogin]
         public ActionResult Delete(int id)
         {
             var json = HttpContext.Session.GetString("CART");
@@ -111,6 +130,7 @@ namespace Ecommerce.Controllers
                 : (JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>());
 
             cart = cart.Where(i => i.IdProduto != id).ToList();
+
             HttpContext.Session.SetString("CART", JsonSerializer.Serialize(cart));
 
             return RedirectToAction("Index");
