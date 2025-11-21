@@ -30,23 +30,11 @@ else
                 <td>@p.IdPedido</td>
                 <td>@p.DataPedido.ToString("dd/MM/yyyy HH:mm")</td>
                 <td>@p.QuantidadeItens</td>
-                <td>@p.StatusPedido</td><td>
-                    @if (p.StatusPedido == "Aguardando pagamento")
-                    {
-                        <a asp-controller="Pedido" asp-action="Pagamento" asp-route-id="@p.IdPedido"
-                        class="btn btn-sm btn-warning">
-                            Aguardando pagamento – pagar agora
-                        </a>
-                    }
-                    else
-                    {
-                        @p.StatusPedido
-                    }
-                </td>
-
+                <td>@p.StatusPedido</td>
                 <td>R$ @p.ValorTotal.ToString("0.00")</td>
             </tr>
         }
+
         </tbody>
     </table>
 }
