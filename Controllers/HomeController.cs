@@ -18,7 +18,9 @@ public class HomeController : Controller
     {
         ViewBag.TodasCategorias = categoriaRepository.ReadAll();        
         
-        var listaDeProdutos = produtoRepository.ReadAllDestaques();       
+        var listaDeProdutos = produtoRepository.ReadAllDestaques(); 
+
+        ViewBag.MaisVendidos = produtoRepository.ReadAllMaisVendidos();      
         
         return View(listaDeProdutos);
     }

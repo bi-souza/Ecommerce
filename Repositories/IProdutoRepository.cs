@@ -7,6 +7,7 @@ public interface IProdutoRepository
     List<Produto> ReadAllByCategoria(int categoriaId);
     List<Produto> ReadAllDestaques();
     List<Produto> ReadAll();
+    List<Produto> ReadAllMaisVendidos();
     Produto Read(int id);
     void Create(Produto model);
     bool Delete(int id);

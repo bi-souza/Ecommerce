@@ -34,10 +34,24 @@
                                 <input type="email" class="form-control" id="inputEmail" name="Email" value="@Model.Email" required>
                             </div>
 
-                            <div class="mb-4">
-                                <label for="inputPassword" class="form-label">Senha</label>
-                                <input type="password" class="form-control" id="inputPassword" name="Senha" required>
-                            </div>
+                                <div class="mb-4">
+                                    <label for="inputPassword" class="form-label">Senha</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="inputPassword" name="Senha" required style="height: 50px; font-size: 1rem;">
+                                        <button type="button" class="btn btn-link text-secondary fw-bold" style="text-decoration: none;" 
+                                                onmouseover="this.style.color='blue'" onmouseout="this.style.color='gray'" 
+                                                onclick="toggleSenha('inputPassword')">
+                                            ver
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <script>
+                                    function toggleSenha(id) {
+                                        var input = document.getElementById(id);
+                                        input.type = input.type === "password" ? "text" : "password";
+                                    }
+                                </script>
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-primary btn-auth-submit">Entrar</button>                                
