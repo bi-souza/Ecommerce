@@ -292,3 +292,4 @@ VALUES (@Pedido10, 5, 1, 49.90, 49.90),
 
 INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
 VALUES (@Pedido10, 67.80, 'Crédito');
+
