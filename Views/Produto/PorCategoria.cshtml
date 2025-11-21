@@ -28,12 +28,16 @@
                             </a>
 
                             <form asp-controller="Carrinho" asp-action="Create" method="post">
+
+                                
                     
                                 @* Campo oculto essencial para passar o ID do produto para o Controller *@
                                 <input type="hidden" name="IdProduto" value="@produto.IdProduto" />
                                 
                                 @* Campo oculto opcional: assume a quantidade 1 por padrão *@
                                 <input type="hidden" name="Quantidade" value="1" />
+
+                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
                                 
                                 <button type="submit" 
                                         class="btn w-100" 

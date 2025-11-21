@@ -113,9 +113,30 @@ namespace Ecommerce.Controllers
             var item = cart.FirstOrDefault(i => i.IdProduto == id);
             if (item != null)
             {
-                item.Quantidade = form.Quantidade < 1 ? 1 : form.Quantidade;
+                
+                var p = repository.Read(id); 
+                
+                if (p == null) 
+                {
+                    TempData["Msg"] = "Erro: Produto não encontrado no catálogo.";
+                    return RedirectToAction("Index");
+                }
+
+                var novaQuantidade = form.Quantidade < 1 ? 1 : form.Quantidade;
+                
+                if (novaQuantidade > p.Estoque)
+                {
+                    
+                    TempData["Msg"] =
+                        $"Estoque insuficiente para '{p.NomeProduto}'. Disponível: {p.Estoque} unidades.";
+                    
+                    return RedirectToAction("Index");
+                }                
+                
+                item.Quantidade = novaQuantidade; 
 
                 HttpContext.Session.SetString("CART", JsonSerializer.Serialize(cart));
+                TempData["Msg"] = "Quantidade do produto atualizada com sucesso."; 
             }
 
             return RedirectToAction("Index");

@@ -50,6 +50,8 @@
                                 @* Campo oculto opcional: assume a quantidade 1 por padrão *@
                                 <input type="hidden" name="Quantidade" value="1" />
                                 
+                               <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+
                                 <button type="submit" 
                                         class="btn w-100" 
                                         style="background-color: #90EE90; border-color: #90EE90; color: black;">

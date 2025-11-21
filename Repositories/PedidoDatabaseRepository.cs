@@ -14,7 +14,7 @@ namespace Ecommerce.Repositories
             using var cmd = new SqlCommand(@"
                 SELECT COUNT(IP.ProdutoId)
                 FROM ItensPedido IP
-                JOIN Pedido P ON IP.PedidoId = P.IdPedido
+                JOIN Pedidos P ON IP.PedidoId = P.IdPedido
                 WHERE P.ClienteId = @ClienteId 
                   AND IP.ProdutoId = @ProdutoId
                   AND P.StatusPedido = 'Concluído';", conn);
@@ -35,7 +35,7 @@ namespace Ecommerce.Repositories
             try
             {
                 using var cmdPedido = new SqlCommand(@"
-                    INSERT INTO Pedido (DataPedido, ValorTotal, StatusPedido, ClienteId)
+                    INSERT INTO Pedidos (DataPedido, ValorTotal, StatusPedido, ClienteId)
                     VALUES (GETDATE(), @total, 'Aguardando pagamento', @cli);
                     SELECT CAST(SCOPE_IDENTITY() AS int);", conn, tx);
 
@@ -77,7 +77,7 @@ namespace Ecommerce.Repositories
             try
             {
                 using (var updCmd = new SqlCommand(@"
-                    UPDATE Pedido 
+                    UPDATE Pedidos 
                     SET StatusPedido = 'Concluído' 
                     WHERE IdPedido = @id;", conn, tx))
                 {
@@ -110,7 +110,7 @@ namespace Ecommerce.Repositories
                     p.ValorTotal,
                     p.StatusPedido,
                     COUNT(i.PedidoId) AS QuantidadeItens
-                FROM Pedido p
+                FROM Pedidos p
                 LEFT JOIN ItensPedido i ON i.PedidoId = p.IdPedido
                 WHERE p.ClienteId = @cliente
                 GROUP BY 

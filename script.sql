@@ -132,7 +132,7 @@ INSERT INTO Produtos (NomeProduto, Descricao, Preco, Estoque, ImagemUrl, Destaqu
 VALUES ('Quinoa Real em Grãos', 'Grãos de Quinoa Real orgânica. Pacote 250g.', 19.90, 40, '/images/produtos/quinoa-graos.jpg', 1, 6);
 
 
---INSERIR UM ADMIN
+--INSERIR ADMIN
 DECLARE @NovoAdminId INT;
 
 -- 1. INSERIR NA TABELA BASE: PESSOA
@@ -152,25 +152,39 @@ VALUES (@NovoAdminId);
 SELECT 'Administrador Inserido com sucesso!' AS Status, @NovoAdminId AS IdPessoa_IdAdmin;
 
 
---INSERIR UM CLIENTE
+--INSERIR CLIENTES
+-- 1º Cliente
 DECLARE @NovoClienteId INT;
 
--- 1. INSERIR NA TABELA BASE: PESSOA
 INSERT INTO Pessoas 
 (Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
 VALUES
 ('Lúcia Helena', '11122233355', 'lucia@cliente.com', '11987654321', '1950-10-25', 'senha123');
 
--- CAPTURAR O ID GERADO PARA A PESSOA
 SET @NovoClienteId = SCOPE_IDENTITY();
 
--- 2. INSERIR NA TABELA DE ESPECIALIZAÇÃO: CLIENTE
 INSERT INTO Clientes (IdCliente)
 VALUES (@NovoClienteId);
 
--- VERIFICAÇÃO (OPCIONAL)
 SELECT 'Cliente Inserido com sucesso!' AS Status, @NovoClienteId AS IdPessoa_IdCliente;
 
+--INSERIR CLIENTES
+-- 2º Cliente
+DECLARE @NovoClienteId INT;
+
+INSERT INTO Pessoas 
+(Nome, Cpf, Email, Telefone, DataNasc, SenhaHash)
+VALUES
+('Maria Vera', '11122233310', 'mvera@cliente.com', '11987654310', '1970-02-13', '123senha');
+
+SET @NovoClienteId = SCOPE_IDENTITY();
+
+INSERT INTO Clientes (IdCliente)
+VALUES (@NovoClienteId);
+
+SELECT 'Cliente Inserido com sucesso!' AS Status, @NovoClienteId AS IdPessoa_IdCliente;
+
+-- INSERIR PEDIDOS
 -- 1º Pedido
 INSERT INTO Pedidos (ClienteId, ValorTotal, StatusPedido)
 VALUES (2, 29.40, 'Concluído');
@@ -292,4 +306,97 @@ VALUES (@Pedido10, 5, 1, 49.90, 49.90),
 
 INSERT INTO Pagamentos (PedidoId, ValorPago, TipoPagamento)
 VALUES (@Pedido10, 67.80, 'Crédito');
+
+-- INSERIR AVALIAÇÕES
+-- 1ª Avaliação
+INSERT INTO Avaliacoes (ClienteId, ProdutoId, Comentario, Nota)
+VALUES (2, 3, 'Produto excelente!', 5);
+
+-- 2ª Avaliação
+INSERT INTO Avaliacoes (ClienteId, ProdutoId, Comentario, Nota)
+VALUES (2, 4, 'Mais que demais!!!', 5);
+
+-- 3ª Avaliação
+INSERT INTO Avaliacoes (ClienteId, ProdutoId, Comentario, Nota)
+VALUES (3, 3, 'Bom.', 3);
+
+-- 4ª Avaliação
+INSERT INTO Avaliacoes (ClienteId, ProdutoId, Comentario, Nota)
+VALUES (3, 4, NULL, 4);
+
+-- TRIGGER PARA REALIZAR A BAIXA DO ESTOQUE
+CREATE TRIGGER tr_baixaEstoque
+ON Pedidos
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    UPDATE p
+    SET p.Estoque = p.Estoque - ip.Quantidade
+    FROM Produtos     p
+    JOIN ItensPedido  ip ON ip.ProdutoId = p.IdProduto
+    JOIN inserted     i  ON i.IdPedido   = ip.PedidoId
+    JOIN deleted      d  ON d.IdPedido   = i.IdPedido
+    WHERE i.StatusPedido = 'Concluído'
+      AND d.StatusPedido <> 'Concluído';
+END
+GO
+
+-- FUNÇÃO DO TIPO TABLE PARA O RELATÓRIO ESTOQUE X DEMANDA
+CREATE FUNCTION estoqueCritico (@NivelMinimoEstoque INT, @DiasRecentes INT)
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT
+        P.IdProduto,
+        P.NomeProduto,
+        C.NomeCategoria,
+        P.Estoque AS EstoqueAtual,        
+        
+        ISNULL(SUM(CASE
+			WHEN @DiasRecentes = 0 THEN 0
+            WHEN PE.DataPedido >= DATEADD(day, -@DiasRecentes, GETDATE()) THEN IP.Quantidade
+            ELSE 0
+        END), 0) AS QuantidadeVendidaRecente,        
+        
+        CASE             
+            WHEN ISNULL(SUM(CASE
+				WHEN @DiasRecentes = 0 THEN 0
+                WHEN PE.DataPedido >= DATEADD(day, -@DiasRecentes, GETDATE()) THEN IP.Quantidade
+                ELSE 0
+            END), 0) = 0 THEN NULL            
+            
+            ELSE CAST(P.Estoque AS DECIMAL(10, 2)) / (
+                CAST(ISNULL(SUM(CASE
+					WHEN PE.DataPedido >= DATEADD(day, -@DiasRecentes, GETDATE()) THEN IP.Quantidade
+                    ELSE 0
+                END), 0) AS DECIMAL(10, 2)) / @DiasRecentes
+            )
+        END AS DiasDeCobertura
+
+    FROM Produtos AS P
+    INNER JOIN Categorias AS C ON P.CategoriaId = C.IdCategoria
+    LEFT JOIN ItensPedido AS IP ON P.IdProduto = IP.ProdutoId
+    LEFT JOIN Pedidos AS PE ON IP.PedidoId = PE.IdPedido
+    WHERE 
+        P.Estoque <= @NivelMinimoEstoque 
+    GROUP BY
+        P.IdProduto, P.NomeProduto, C.NomeCategoria, P.Estoque
+);
+
+-- FUNÇÃO ESCALAR PARA CALCULAR A MÉDIA DE AVALIAÇÕES
+CREATE FUNCTION mediaAvaliacaoProduto (@ProdutoId INT) 
+RETURNS DECIMAL(3, 2) 
+AS 
+BEGIN 
+    DECLARE @Media DECIMAL(3, 2);  
+        
+    SELECT @Media = ISNULL(AVG(CAST(Nota AS DECIMAL(3, 2))), 0.00) 
+    FROM Avaliacoes 
+    WHERE ProdutoId = @ProdutoId; 
+  
+    RETURN @Media; 
+END 
 
