@@ -131,27 +131,40 @@
                         <div class="card-body">
                             <h5 class="card-title">@produto.NomeProduto</h5>
                             
-                            <div class="product-stars">
+                            @*<div class="product-stars">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star-half-alt"></i>
                                 <span class="text-muted" style="font-size: 0.8rem;">(4.5)</span>
-                            </div>
+                            </div>*@
 
                             <h4 style="color: var(--cor-verde-floresta);">R$ @produto.Preco.ToString("F2")</h4>
 
                             <a asp-controller="Produto" 
                             asp-action="Detalhes" 
                             asp-route-id="@produto.IdProduto" 
-                            class="btn btn-outline-success w-100">
+                            class="btn btn-outline-success w-100 mb-2">
                             Ver Detalhes
                             </a>
 
-                            @*<a href="/Carrinho" class="btn btn-primary w-100 mt-2">
-                                <i class="fa fa-shopping-cart"></i> Comprar
-                            </a>*@
+                            <form asp-controller="Carrinho" asp-action="Create" method="post">
+                    
+                                @* Campo oculto essencial para passar o ID do produto para o Controller *@
+                                <input type="hidden" name="IdProduto" value="@produto.IdProduto" />
+                                
+                                @* Campo oculto opcional: assume a quantidade 1 por padrão *@
+                                <input type="hidden" name="Quantidade" value="1" />
+                                
+                                <button type="submit" 
+                                        class="btn w-100" 
+                                        style="background-color: #90EE90; border-color: #90EE90; color: black;">
+                                    <i class="fa fa-shopping-cart"></i> Comprar
+                                </button>
+                            </form>
+                            
+                            
                         </div>
                         
                     </div>

@@ -8,7 +8,7 @@ public class AdministradorDatabaseRepository : DbConnection, IAdministradorRepos
 {
     public AdministradorDatabaseRepository(string? strConn) : base(strConn) { }        
 
-    public Pessoa Login(LoginViewModel model)
+    public Administrador Login(LoginViewModel model)
     {   
         SqlCommand cmd = new SqlCommand(); 
         cmd.Connection = conn; 
@@ -28,7 +28,7 @@ public class AdministradorDatabaseRepository : DbConnection, IAdministradorRepos
         if (reader.Read())
         {
             
-            return new Pessoa
+            return new Administrador
             {
                 IdPessoa = (int)reader["IdPessoa"],
                 Nome = reader["Nome"].ToString(),

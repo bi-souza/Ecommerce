@@ -37,11 +37,11 @@ public class AuthController : Controller
         }
         
         
-        Pessoa admin = _administradorRepository.Login(model); 
+        Administrador admin = _administradorRepository.Login(model); 
 
         if (admin != null)
         {
-            HttpContext.Session.SetInt32("AdminId", admin.IdPessoa);
+            HttpContext.Session.SetInt32("AdminId", admin.IdAdmin);
             HttpContext.Session.SetString("NomeAdmin", admin.Nome);
             HttpContext.Session.SetString("Papel", "Admin");             
             
