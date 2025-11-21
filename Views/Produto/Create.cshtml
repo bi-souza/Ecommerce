@@ -61,7 +61,13 @@
             <button class="btn btn-outline-success">Salvar</button>
         </form>
         @section Scripts {
-            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-        }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>        
+        $.validator.messages.pattern = "O formato do campo está inválido. Siga o padrão 9999,99.";
+        
+    </script>
+    }
     @*</body>*@
 </html>
+

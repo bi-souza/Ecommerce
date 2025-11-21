@@ -64,7 +64,7 @@
         </tbody>
     </table>
     
-    @* INÍCIO DA ESTRUTURA DO MODAL (Copie da View de Categoria, ajustando IDs internos) *@
+   
     <div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" aria-labelledby="modalConfirmacaoExclusaoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -73,7 +73,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
-                @* AJUSTE CRÍTICO: O formulário deve apontar para o Controller de PRODUTO *@
+                
                 <form asp-controller="Produto" asp-action="Delete" method="POST">
                     <div class="modal-body">
                         @* ID OCULTO: ID genérico para Produto *@
