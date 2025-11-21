@@ -38,9 +38,25 @@
                             <a asp-controller="Produto" 
                                asp-action="Detalhes" 
                                asp-route-id="@produto.IdProduto" 
-                               class="btn btn-outline-success w-100">
+                               class="btn btn-outline-success w-100 mb-2">
                                 Ver Detalhes
                             </a>
+
+                            <form asp-controller="Carrinho" asp-action="Create" method="post">
+                    
+                                @* Campo oculto essencial para passar o ID do produto para o Controller *@
+                                <input type="hidden" name="IdProduto" value="@produto.IdProduto" />
+                                
+                                @* Campo oculto opcional: assume a quantidade 1 por padrão *@
+                                <input type="hidden" name="Quantidade" value="1" />
+                                
+                                <button type="submit" 
+                                        class="btn w-100" 
+                                        style="background-color: #90EE90; border-color: #90EE90; color: black;">
+                                    <i class="fa fa-shopping-cart"></i> Comprar
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                 </div>

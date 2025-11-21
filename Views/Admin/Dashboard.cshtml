@@ -11,7 +11,7 @@
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="card-title"><i class="fas fa-box me-2"></i> Gerenciar Produtos</h5>
+                    <h5 class="card-title"><i class="fa-solid fa-box-open me-2"></i> Gerenciar Produtos</h5>
                     <p class="card-text">Crie, edite e exclua produtos da loja.</p>
                     <a asp-controller="Produto" asp-action="Index" class="btn btn-lg btn-success mt-3">
                         Acessar Produtos
@@ -25,8 +25,20 @@
                 <div class="card-body d-flex flex-column justify-content-between">
                     <h5 class="card-title"><i class="fas fa-tags me-2"></i> Gerenciar Categorias</h5>
                     <p class="card-text">Crie, edite e exclua as categorias dos produtos.</p>
-                    <a asp-controller="Categoria" asp-action="Index" class="btn btn-lg btn-secondary mt-3">
+                    <a asp-controller="Categoria" asp-action="Index" class="btn btn-lg btn-success mt-3">
                         Acessar Categorias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title"><i class="fa-solid fa-file me-2"></i> Gerar Relatório</h5>
+                    <p class="card-text">Visualize informações sobre estoque, vendas e demanda.</p>
+                    <a asp-controller="Admin" asp-action="EstoqueCritico" class="btn btn-lg btn-success mt-3">
+                        Acessar Relatório
                     </a>
                 </div>
             </div>

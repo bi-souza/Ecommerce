@@ -1,0 +1,103 @@
+@model EstoqueInputViewModel
+@using Ecommerce.Models
+
+@{
+    // Tenta obter o relatório gerado do ViewBag (que só existe após o POST)
+    ViewData["Title"] = "Gerar Relatório de Estoque Crítico";
+    List<EstoqueCriticoViewModel>? relatorioGerado = ViewBag.Relatorio as List<EstoqueCriticoViewModel>;
+    
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<br />
+<a asp-controller="Admin" asp-action="Dashboard"
+    class="btn btn-voltar-custom mb-3">
+        ← Voltar
+    </a>
+<br />
+@* Seção 1: Formulário de Entrada *@
+<h1>Relatório de Estoque Crítico</h1>
+@* O asp-for garante que os valores em @Model sejam carregados (inclusive após erro de validação) *@
+<form asp-action="EstoqueCritico" method="post" class="mb-5">
+    
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>     
+
+    <div class="row">
+        
+        <div class="col-md-3">
+            <label asp-for="NivelMinimo" class="form-label">Nível Mínimo do Estoque:</label>
+            <input asp-for="NivelMinimo" class="form-control" type="number" />
+            <span asp-validation-for="NivelMinimo" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="DiasRecentes" class="form-label">Período:</label>
+            <input asp-for="DiasRecentes" class="form-control" type="number" />
+            <span asp-validation-for="DiasRecentes" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn" style="background-color: #90EE90; border-color: #90EE90; color: black;">Gerar Relatório</button>
+        </div>
+    </div>
+</form>
+
+@* Seção 2: Tabela de Relatório (Condicional) *@
+@if (relatorioGerado != null && relatorioGerado.Count > 0)
+{
+    <h3>Resultados</h3>
+    <p>Produtos com Estoque menor que @Model.NivelMinimo e Vendas nos ultimos @Model.DiasRecentes dias.</p>
+    
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>ID Produto</th>
+                <th>Nome do Produto</th>
+                <th>Categoria</th>
+                <th class="text-center">Estoque Atual</th>
+                <th class="text-center">Venda Recente (@Model.DiasRecentes dias)</th>
+                <th class="text-center">Dias de Cobertura Restantes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in relatorioGerado)
+            {
+                // Realça a linha se o estoque for muito baixo comparado à venda
+                <tr class="@(item.EstoqueAtual < (item.QuantidadeVendidaRecente / 2) ? "table-danger" : "")">
+                    <td>@item.IdProduto</td>
+                    <td>@item.NomeProduto</td>
+                    <td>@item.NomeCategoria</td>
+                    <td class="text-center">@item.EstoqueAtual</td>
+                    <td class="text-center">@item.QuantidadeVendidaRecente</td>
+                    <td class="text-center">
+                    @if (item.DiasDeCobertura.HasValue)
+                    {
+                        
+                        @item.DiasDeCobertura.Value.ToString("F1")
+                    }
+                    else
+                    {
+                        
+                        <b>∞</b> 
+                    }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+else if (Context.Request.Method == "POST")
+{
+    // Mensagem de Feedback: só aparece após o POST se a lista for vazia
+    <div class="alert alert-info mt-3">Nenhum produto encontrado sob os critérios informados.</div>
+}
+
+@section Scripts {
+    @* Garante que o jQuery e a validação client-side funcionem *@
+    <partial name="_ValidationScriptsPartial" />
+}

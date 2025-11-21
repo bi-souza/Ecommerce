@@ -71,7 +71,7 @@ namespace Ecommerce.Controllers
 
             else
             {
-                TempData["MensagemErro"] = "Não foi possível excluir a categoria. Existem produtos vinculados a ela.";
+                TempData["DeleteError"] = $"Não foi possível excluir a categoria. Existem produtos vinculados a ela.";
                 return RedirectToAction("Index");
             } 
            

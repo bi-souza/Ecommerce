@@ -3,6 +3,6 @@ namespace Ecommerce.Repositories;
 
 public interface IAdministradorRepository
 {
-    Pessoa Login(LoginViewModel model);
+    Administrador Login(LoginViewModel model);
 }
     

@@ -6,6 +6,7 @@
 @{
     
     var nomeCliente = Context.Session.GetString("NomeCliente");
+    var nomeAdminSessao   = Context.Session.GetString("NomeAdmin");
     
 }
 
@@ -75,14 +76,11 @@
                         {
                             carrinhoController = "Auth";
                             carrinhoAction = "Login";
-                        }
-                    
+                        }            
                         
-                        @if (string.IsNullOrEmpty(nomeClienteSessao)) 
-                        {
-                            carrinhoController = "Auth";
-                            carrinhoAction = "Login";
-                        }
+                               
+                        
+                        
                     }
 
                     

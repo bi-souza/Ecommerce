@@ -3,87 +3,104 @@
     ViewData["Title"] = "Cadastro de Cliente";
 }
 
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-success text-white">
-                    <h4 class="mb-0">Cadastre-se</h4>
+<div class="position-fixed top-0 start-0 w-100 h-100" style="backdrop-filter: blur(5px); z-index: 0;"></div>
+
+<div class="d-flex justify-content-center align-items-start min-vh-100 py-5" style="position: relative; z-index: 10;">
+    <div class="card shadow-lg border-0" style="width: 800px; backdrop-filter: blur(12px); background-color: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px;">
+
+        <!-- Cabeçalho do formulário -->
+        <div class="card-header bg-success text-white text-center rounded-top">
+            <h2 class="fw-bold mb-0" style="font-size: 2.5rem;">Cadastre-se</h2>
+        </div>
+
+        <!-- Corpo do Formulário -->
+        <div class="card-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.Error
                 </div>
-                <div class="card-body">
-                    
-                    @* Exibe erros customizados do Controller, como "E-mail já cadastrado." *@
-                    @if (ViewBag.Error != null)
-                    {
-                        <div class="alert alert-danger" role="alert">
-                            @ViewBag.Error
-                        </div>
-                    }
+            }
 
-                    @* O formulário submete para a Action [HttpPost] Cadastro(Cliente cliente) *@
-                    <form asp-action="Cadastro" method="post">
-                        
-                        @* **Validação sumária do Modelo (ModelState)** *@
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <form asp-action="Cadastro" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="Nome" class="form-label"></label>
-                            <input asp-for="Nome" class="form-control" />
-                            <span asp-validation-for="Nome" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Cpf" class="form-label"></label>
-                            <input asp-for="Cpf" type="tel" inputmode="numeric" class="form-control" placeholder="Apenas dígitos" maxlength="11"/>
-                            <span asp-validation-for="Cpf" class="text-danger"></span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Telefone" class="form-label"></label>
-                            <input asp-for="Telefone" type="tel" inputmode="numeric" class="form-control" placeholder="DDD + Telefone (apenas dígitos)" maxlength="11"/>
-                            <span asp-validation-for="Telefone" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="DataNasc" class="form-label">Data de Nascimento (dd/mm/aaaa)</label>                            
-                            @* O tipo "date" é importante para o input de DataNasc *@
-                            <input asp-for="DataNasc" type="text" class="form-control" placeholder="Ex: 01/01/2002" />
-                            <span asp-validation-for="DataNasc" class="text-danger"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="SenhaHash" class="form-label">Senha</label>
-                            @* O tipo "password" garante que o valor não seja visível *@
-                            <input asp-for="SenhaHash" type="password" class="form-control" />
-                            <span asp-validation-for="SenhaHash" class="text-danger"></span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label asp-for="ConfirmarSenha" class="form-label">Confirmar Senha</label>
-                            <input asp-for="ConfirmarSenha" type="password" class="form-control" />
-                            <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-success">Finalizar Cadastro</button>
-                        </div>
-                        <p class="mt-3 text-center">
-                            Já tem conta? <a asp-controller="Auth" asp-action="Login">Faça Login</a>
-                        </p>
-                    </form>
+                <!-- Outros campos... -->
+                <div class="mb-4">
+                    <label asp-for="Nome" class="form-label fw-bold"></label>
+                    <input asp-for="Nome" class="form-control form-control-lg" style="height: 60px; font-size: 1.25rem;" />
+                    <span asp-validation-for="Nome" class="text-danger"></span>
                 </div>
-            </div>
+
+                <div class="mb-4">
+                    <label asp-for="Cpf" class="form-label fw-bold"></label>
+                    <input asp-for="Cpf" type="tel" inputmode="numeric" class="form-control form-control-lg" placeholder="Apenas dígitos" maxlength="11" style="height: 60px; font-size: 1.25rem;" />
+                    <span asp-validation-for="Cpf" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Email" class="form-label fw-bold"></label>
+                    <input asp-for="Email" class="form-control form-control-lg" style="height: 60px; font-size: 1.25rem;" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Telefone" class="form-label fw-bold"></label>
+                    <input asp-for="Telefone" type="tel" inputmode="numeric" class="form-control form-control-lg" placeholder="DDD + Telefone (apenas dígitos)" maxlength="11" style="height: 60px; font-size: 1.25rem;" />
+                    <span asp-validation-for="Telefone" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="DataNasc" class="form-label fw-bold">Data de Nascimento (dd/mm/aaaa)</label>
+                    <input asp-for="DataNasc" type="text" class="form-control form-control-lg" placeholder="Ex: 01/01/2002" style="height: 60px; font-size: 1.25rem;" />
+                    <span asp-validation-for="DataNasc" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="SenhaHash" class="form-label fw-bold">Senha</label>
+                    <div class="input-group">
+                        <input asp-for="SenhaHash" type="password" class="form-control form-control-lg" id="SenhaHash" style="height: 60px; font-size: 1.25rem;"/>
+                        <button type="button" class="btn btn-link text-secondary fw-bold" style="text-decoration: none;" 
+                                onmouseover="this.style.color='blue'" onmouseout="this.style.color='gray'" 
+                                onclick="toggleSenha('SenhaHash')">
+                            ver
+                        </button>
+                    </div>
+                    <span asp-validation-for="SenhaHash" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="ConfirmarSenha" class="form-label fw-bold">Confirmar Senha</label>
+                    <div class="input-group">
+                        <input asp-for="ConfirmarSenha" type="password" class="form-control form-control-lg" id="ConfirmarSenha" style="height: 60px; font-size: 1.25rem;"/>
+                        <button type="button" class="btn btn-link text-secondary fw-bold" style="text-decoration: none;" 
+                                onmouseover="this.style.color='blue'" onmouseout="this.style.color='gray'" 
+                                onclick="toggleSenha('ConfirmarSenha')">
+                            ver
+                        </button>
+                    </div>
+                    <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-3 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg" style="height: 65px; font-size: 1.5rem;">Finalizar Cadastro</button>
+                </div>
+
+                <p class="mt-4 text-center" style="font-size: 1.1rem;">
+                    Já tem conta? <a asp-controller="Auth" asp-action="Login">Faça Login</a>
+                </p>
+            </form>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    @* Garante a validação de campos no lado do cliente (client-side validation) *@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function toggleSenha(id) {
+            var input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+    </script>
 }

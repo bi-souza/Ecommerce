@@ -109,6 +109,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
                 CategoriaId = (int)reader["CategoriaId"]
             });
         }
+        reader.Close();
         return produtos;
 
     }
@@ -136,7 +137,58 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
                 CategoriaId = (int)reader["CategoriaId"]
             });
         }
+        reader.Close();
         return produtos;
+    }
+
+    public List<Produto> ReadAllMaisVendidos()
+    {
+        List<Produto> lista = new List<Produto>();
+
+        string sql = @"
+            SELECT TOP 4 
+                p.IdProduto,
+                p.NomeProduto,
+                p.Descricao,
+                p.Preco,
+                p.Estoque,
+                p.ImagemUrl,
+                p.Destaque,
+                p.CategoriaId,
+                SUM(ip.Quantidade) AS TotalVendido
+            FROM Produtos p
+            INNER JOIN ItensPedido ip 
+                ON p.IdProduto = ip.ProdutoId
+            GROUP BY 
+                p.IdProduto, 
+                p.NomeProduto, 
+                p.Descricao, 
+                p.Preco,
+                p.Estoque,
+                p.ImagemUrl,
+                p.Destaque,
+                p.CategoriaId
+            ORDER BY TotalVendido DESC";
+
+        SqlCommand cmd = new SqlCommand(sql, conn);
+        SqlDataReader reader = cmd.ExecuteReader();
+
+        while (reader.Read())
+        {
+            lista.Add(new Produto
+            {
+                IdProduto = (int)reader["IdProduto"],
+                NomeProduto = (string)reader["NomeProduto"],
+                Descricao = (string)reader["Descricao"],
+                Preco = (decimal)reader["Preco"],
+                Estoque = (int)reader["Estoque"],
+                ImagemUrl = reader["ImagemUrl"].ToString(),
+                Destaque = (int)reader["Destaque"],
+                CategoriaId = (int)reader["CategoriaId"]
+            });
+        }
+        reader.Close();
+        return lista;
     }
     
     public List<Produto> ReadAll()
@@ -161,7 +213,8 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
                 Destaque = (int)reader["Destaque"],
                 CategoriaId = (int)reader["CategoriaId"]
             });
-        }        
+        }      
+        reader.Close();  
         return lista;
     }
     public Produto Read(int id)
@@ -189,6 +242,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
             };
             return produto;
         }
+        reader.Close();
         return null;
     }
     
@@ -221,7 +275,7 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
 
             lista.Add(produto);
         }
-
+        reader.Close();
         return lista;
     }
 
@@ -260,6 +314,41 @@ public class ProdutoDatabaseRepository : DbConnection, IProdutoRepository
             return produto;
         }
         return null; 
+    }
+
+    public List<EstoqueCriticoViewModel> ReadEstoqueCritico(int nivelMinimo, int diasRecentes)
+    {
+        
+        List<EstoqueCriticoViewModel> lista = new List<EstoqueCriticoViewModel>();        
+        
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = conn; 
+        
+        cmd.CommandText = "SELECT * FROM dbo.estoqueCritico(@NivelMinimoEstoque, @DiasRecentes)";
+        
+        cmd.Parameters.AddWithValue("@NivelMinimoEstoque", nivelMinimo);
+        cmd.Parameters.AddWithValue("@DiasRecentes", diasRecentes);
+        
+        using (SqlDataReader reader = cmd.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                
+                lista.Add(new EstoqueCriticoViewModel
+                {
+                    IdProduto = (int)reader["IdProduto"],
+                    NomeProduto = (string)reader["NomeProduto"],                    
+                    NomeCategoria = (string)reader["NomeCategoria"],
+                    EstoqueAtual = (int)reader["EstoqueAtual"],                    
+                    QuantidadeVendidaRecente = (int)reader["QuantidadeVendidaRecente"],
+                    DiasDeCobertura = reader["DiasDeCobertura"] == DBNull.Value 
+                            ? null 
+                            : (decimal)reader["DiasDeCobertura"]
+                });
+            }
+        }
+        
+        return lista;
     }
 
 }

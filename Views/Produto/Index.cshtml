@@ -9,8 +9,18 @@
         var deleteErrorMessage = TempData["DeleteError"]?.ToString();
      }
 
-    <div class="container mt-3">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+
+    <br />
+    <a a asp-controller="Admin" asp-action="Dashboard" 
+        class="btn btn-voltar-custom mb-3">
+            ← Voltar
+        </a>
+
+    @*<div class="container mt-3">*@
     @*<body class="container-fluid">*@
         <h1>Gerenciamento de Produtos</h1>
         <p>Total de produtos: @Model.Count</p>
@@ -36,7 +46,7 @@
                     <td>@produto.Estoque</td>
                     <td>
                         <a class="btn btn-sm btn-outline-warning" href="/produto/update/@produto.IdProduto">
-                            Editar
+                            <i class="fas fa-edit"></i> Editar                            
                         </a>
 
                         @* AJUSTE: Botão APAGAR para abrir o modal *@
@@ -54,7 +64,7 @@
         </tbody>
     </table>
     
-    @* INÍCIO DA ESTRUTURA DO MODAL (Copie da View de Categoria, ajustando IDs internos) *@
+   
     <div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" aria-labelledby="modalConfirmacaoExclusaoLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -63,7 +73,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
-                @* AJUSTE CRÍTICO: O formulário deve apontar para o Controller de PRODUTO *@
+                
                 <form asp-controller="Produto" asp-action="Delete" method="POST">
                     <div class="modal-body">
                         @* ID OCULTO: ID genérico para Produto *@
