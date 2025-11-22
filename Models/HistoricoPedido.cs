@@ -9,5 +9,6 @@ namespace Ecommerce.Models
         public decimal ValorTotal { get; set; }
         public string StatusPedido { get; set; } = string.Empty;
         public int QuantidadeItens { get; set; }
+        public string Produtos { get; set; } = string.Empty;
     }
 }

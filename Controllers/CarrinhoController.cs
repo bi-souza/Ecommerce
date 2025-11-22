@@ -38,20 +38,8 @@ namespace Ecommerce.Controllers
         [RequireLogin]
         public ActionResult Create(CartItem form, string? returnUrl)
         {
-            var p = repository.Read(form.IdProduto);
-            if (p == null)
-                return RedirectToAction("Index", "Home");
-
-            if (form.Quantidade > p.Estoque)
-            {
-                TempData["Msg"] =
-                    $"Estoque insuficiente para '{p.NomeProduto}'. Disponível: {p.Estoque} unidades.";
-
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                    return Redirect(returnUrl);
-
-                return RedirectToAction("Index", "Home");
-            }
+            var p = repository.Read(form.IdProduto); 
+            if (p == null) return RedirectToAction("Index", "Home");
 
             var json = HttpContext.Session.GetString("CART");
             var cart = string.IsNullOrEmpty(json)
@@ -59,6 +47,16 @@ namespace Ecommerce.Controllers
                 : (JsonSerializer.Deserialize<List<CartItem>>(json) ?? new List<CartItem>());
 
             var qtd = form.Quantidade < 1 ? 1 : form.Quantidade;
+
+            if (qtd > p.Estoque)
+            {
+                TempData["Msg"] = $"Estoque insuficiente para '{p.NomeProduto}'. Disponível: {p.Estoque} unidades.";
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+
+                return RedirectToAction("Index", "Home");
+            }
 
             var item = cart.FirstOrDefault(i => i.IdProduto == p.IdProduto);
             if (item == null)
@@ -83,7 +81,11 @@ namespace Ecommerce.Controllers
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
 
-            return RedirectToAction("Index", "Produto");
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrWhiteSpace(referer))
+                return Redirect(referer);
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -114,7 +116,6 @@ namespace Ecommerce.Controllers
             if (item != null)
             {
                 item.Quantidade = form.Quantidade < 1 ? 1 : form.Quantidade;
-
                 HttpContext.Session.SetString("CART", JsonSerializer.Serialize(cart));
             }
 

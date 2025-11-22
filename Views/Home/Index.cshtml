@@ -4,7 +4,6 @@
     ViewData["Title"] = "Página Inicial";
 }
 
-
 <link rel="stylesheet" href="~/css/style.css">
 
 @section Scripts {
@@ -13,7 +12,6 @@
         $('.carousel-item').on('click', function(event) {            
             
             if (!$(event.target).closest('.carousel-caption').length) {
-                
                 
                 var categoriaId = $(this).data('categoria-id');
                 
@@ -28,7 +26,6 @@
     });
 </script>
 }
-
 
 <div class="container mt-5">
     <div id="carouselExampleCaptions" class="carousel slide mb-5" data-bs-ride="carousel">
@@ -107,7 +104,8 @@
         </button>
     </div>
 
-    <br/><div class="row mb-3">
+    <br />
+    <div class="row mb-3">
         <div class="col">
             <h2>MAIS VENDIDOS <span style="color: var(--cor-cinza-escuro); font-weight: 300;"></span></h2>
         </div>
@@ -134,13 +132,17 @@
                             <h4 style="color: var(--cor-verde-floresta);">R$ @produto.Preco.ToString("F2")</h4>
 
                             <a asp-controller="Produto"
-                            asp-action="Detalhes"
-                            asp-route-id="@produto.IdProduto"
-                            class="btn btn-outline-success w-100 mb-2">
-                            Ver Detalhes
+                               asp-action="Detalhes"
+                               asp-route-id="@produto.IdProduto"
+                               class="btn btn-outline-success w-100 mb-2">
+                                Ver Detalhes
                             </a>
 
-                            <form asp-controller="Carrinho" asp-action="Create" method="post">
+                            <!-- form de comprar (MAIS VENDIDOS) -->
+                            <form asp-controller="Carrinho"
+                                  asp-action="Create"
+                                  asp-route-returnUrl="@Context.Request.Path + Context.Request.QueryString"
+                                  method="post">
                     
                                 @* Campo oculto essencial para passar o ID do produto para o Controller *@
                                 <input type="hidden" name="IdProduto" value="@produto.IdProduto" />
@@ -167,7 +169,8 @@
         }
     </div>
 
-        </br><div class="row mb-3">
+    </br>
+    <div class="row mb-3">
         <div class="col">
             <h2>EM DESTAQUE <span style="color: var(--cor-cinza-escuro); font-weight: 300;"></span></h2>
         </div>
@@ -183,8 +186,8 @@
                         
                         @{
                             var imagePath = string.IsNullOrEmpty(produto.ImagemUrl) 
-                                                                ? "/images/placeholder-produto.jpg" 
-                                                                : produto.ImagemUrl;
+                                ? "/images/placeholder-produto.jpg" 
+                                : produto.ImagemUrl;
                         }
                         <img src="@imagePath" class="card-img-top" alt="@produto.NomeProduto">
                         
@@ -203,13 +206,17 @@
                             <h4 style="color: var(--cor-verde-floresta);">R$ @produto.Preco.ToString("F2")</h4>
 
                             <a asp-controller="Produto" 
-                            asp-action="Detalhes" 
-                            asp-route-id="@produto.IdProduto" 
-                            class="btn btn-outline-success w-100 mb-2">
-                            Ver Detalhes
+                               asp-action="Detalhes" 
+                               asp-route-id="@produto.IdProduto" 
+                               class="btn btn-outline-success w-100 mb-2">
+                                Ver Detalhes
                             </a>
 
-                            <form asp-controller="Carrinho" asp-action="Create" method="post">
+                            <!-- form de comprar (EM DESTAQUE) -->
+                            <form asp-controller="Carrinho"
+                                  asp-action="Create"
+                                  asp-route-returnUrl="@Context.Request.Path + Context.Request.QueryString"
+                                  method="post">
                     
                                 @* Campo oculto essencial para passar o ID do produto para o Controller *@
                                 <input type="hidden" name="IdProduto" value="@produto.IdProduto" />
@@ -224,7 +231,6 @@
                                 </button>
                             </form>
                             
-                            
                         </div>
                         
                     </div>
@@ -238,3 +244,4 @@
             </div>
         }
     </div>
+</div>
