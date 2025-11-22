@@ -16,9 +16,15 @@
  * 2. ESTILOS GLOBAIS 
  */
 body {
+    display: flex;             /* Habilita o Flexbox */
+    flex-direction: column;    /* Empilha header, content, footer verticalmente */
+    min-height: 100vh;
     background-color: var(--cor-branco-amendoa); 
     color: var(--cor-cinza-escuro);             
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.container {
+    flex-grow: 1;              /* ESTE É O CÓDIGO. Força o container principal a crescer e ocupar o espaço restante, empurrando o footer. */
 }
 
 h1, h2, h3, h4, h5, h6 {

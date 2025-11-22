@@ -137,7 +137,7 @@ namespace Ecommerce.Controllers
             if (clienteId is null)
             {
                 TempData["Msg"] = "Faça login para ver seus pedidos.";
-                return RedirectToAction("Login", "Cliente");
+                return RedirectToAction("Login", "Auth");
             }
 
             var cfg = HttpContext.RequestServices.GetService(typeof(IConfiguration)) as IConfiguration
